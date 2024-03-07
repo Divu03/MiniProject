@@ -14,11 +14,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -34,11 +55,23 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+
             FruitHubTheme {
-                Column {
-                    ArticlesHome(articleTitle = "Watermelon – Juicy and Refreshing Summer Favorite")
-                    FruitCard("Banana")
-                    FruitCard()
+                Scaffold(
+                    bottomBar = { BottomNavigation() }
+                ) { innerPadding ->
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        ArticlesHome(articleTitle = "Watermelon – Juicy and Refreshing Summer Favorite")
+                        FruitCard("Banana")
+                        FruitCard()
+                        ArticlesExplore("Watermelon – Juicy and Refreshing Summer Favorite")
+                    }
+
                 }
             }
         }
@@ -143,16 +176,92 @@ fun FruitCard(
     }
 }
 
+data class NavigationItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val hasNews: Boolean,
+    val badgeCount: Int? = 0
+)
+val item = listOf(
+    NavigationItem(
+        title = "Home",
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home,
+        hasNews = false
+    ),
+    NavigationItem(
+        title = "Explore",
+        selectedIcon = Icons.Filled.Search,
+        unselectedIcon = Icons.Outlined.Search,
+        hasNews = false
+    ),
+    NavigationItem(
+        title = "Camara",
+        selectedIcon = Icons.Filled.Create,
+        unselectedIcon = Icons.Outlined.Create,
+        hasNews = false
+    ),
+    NavigationItem(
+        title = "MySaves",
+        selectedIcon = Icons.Filled.Favorite,
+        unselectedIcon = Icons.Outlined.FavoriteBorder,
+        hasNews = false
+    ),
+    NavigationItem(
+        title = "Account",
+        selectedIcon = Icons.Filled.Person,
+        unselectedIcon = Icons.Outlined.Person,
+        hasNews = false
+    )
+)
+
+@Composable
+fun BottomNavigation(){
+    var selectedItemIndex by rememberSaveable {
+        mutableStateOf(0)
+    }
+    NavigationBar {
+        item.forEachIndexed{
+            index, items ->
+            NavigationBarItem(
+                selected = selectedItemIndex == index,
+                onClick = {
+                          selectedItemIndex = index
+                    //nav controller
+                },
+                label = { Text(text = items.title) },
+                icon = {
+                    Icon(
+                        imageVector = if(selectedItemIndex == index){
+                            items.selectedIcon
+                        }else items.unselectedIcon,
+                        contentDescription = null
+                    )
+                })
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     FruitHubTheme {
-        Column(Modifier.fillMaxSize()) {
-            ArticlesHome(articleTitle = "Watermelon – Juicy and Refreshing Summer Favorite")
-            FruitCard("Banana")
-            FruitCard()
-            ArticlesExplore("Watermelon – Juicy and Refreshing Summer Favorite")
+        Scaffold(
+            bottomBar = { BottomNavigation() }
+        ) { innerPadding ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                ArticlesHome(articleTitle = "Watermelon – Juicy and Refreshing Summer Favorite")
+                FruitCard("Banana")
+                FruitCard()
+                ArticlesExplore("Watermelon – Juicy and Refreshing Summer Favorite")
+            }
+
         }
+
     }
 }

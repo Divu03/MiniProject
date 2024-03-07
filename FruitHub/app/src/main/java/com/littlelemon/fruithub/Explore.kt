@@ -10,13 +10,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,26 +43,37 @@ class Explore : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FruitHubTheme {
-                Column(
-                    Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    ArticlesExplore()
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigation()
+                    }
+                ) {
+                        innerPadding ->
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        TopExplore()
+                        ArticlesExplore()
+                    }
                 }
             }
         }
     }
 }
+
+
 @Composable
 fun ArticlesExplore(articleTitle: String = "hi", articleImageId: Int = R.drawable.watermelon_article){
-    var checked by remember { mutableStateOf(true) }
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
         modifier = Modifier
-            .size(width = 346.dp, height = 297.dp)
-            .padding(10.dp),
+            .height(297.dp)
+            .padding(25.dp, 10.dp),
     ){
         Column(
             Modifier
@@ -107,29 +121,65 @@ fun ArticlesExplore(articleTitle: String = "hi", articleImageId: Int = R.drawabl
             }
         }
     }
-    Switch(
-        checked = checked,
-        onCheckedChange = { checked = it },
-        thumbContent = if(!checked){
-            {
-                Modifier.size(24.dp)
-            }
-        }else{
-            null
-        }
-    )
 }
 
 
+@Composable
+fun TopExplore(){
+    var checked by remember { mutableStateOf(true) }
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(25.dp, 0.dp)
+    ){
+        Image(painter = painterResource(id = R.drawable.icon_back), contentDescription = null)
+        Text(
+            text = "Explore",
+            fontFamily = FontFamily(
+                Font(resId = R.font.inter_bold,
+                    FontWeight.Bold)
+            ),
+            fontSize = 24.sp,
+        )
+        Switch(
+            checked = checked,
+            onCheckedChange = { checked = it },
+            thumbContent = if(!checked){
+                {
+                    Modifier.size(24.dp)
+                }
+            }else{
+                null
+            }
+        )
+    }
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview2() {
     FruitHubTheme {
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-        ArticlesExplore()
+        Scaffold(
+            bottomBar = {
+                BottomNavigation()
+            }
+        ) {
+            innerPadding ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                TopExplore()
+                ArticlesExplore()
+            }
         }
+
     }
 }
