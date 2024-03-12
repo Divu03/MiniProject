@@ -35,7 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,21 +47,25 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.littlelemon.fruithub.ui.theme.FruitHubTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity(private val navController: NavHostController) : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            MyNavigation()
 
             FruitHubTheme {
                 Scaffold(
-                    bottomBar = { BottomNavigation(0) }
+                    bottomBar = { BottomNavigation(0,navController) }
                 ) { innerPadding ->
                     Column(
                         Modifier
@@ -80,6 +84,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+@Composable
+fun MyNavigation(){
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = MainActivityScreen.route){
+        composable(MainActivityScreen.route){
+            MainActivity(navController)
+        }
+        composable(ExploreScreen.route){
+            Explore(navController)
+        }
+        composable(MySaveScreen.route){
+            MySave(navController)
+        }
+    }
+}
 
 @Composable
 fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermelon_article){
@@ -183,8 +203,9 @@ data class NavigationItem(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val hasNews: Boolean,
-    val badgeCount: Int? = 0
-)
+    val badgeCount: Int? = 0,
+    val route: String
+) 
 
 
 val item = listOf(
@@ -192,38 +213,43 @@ val item = listOf(
         title = "Home",
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
-        hasNews = false
+        hasNews = false,
+        route = "MainActivity"
     ),
     NavigationItem(
         title = "Explore",
         selectedIcon = Icons.Filled.Search,
         unselectedIcon = Icons.Outlined.Search,
-        hasNews = false
+        hasNews = false,
+        route = "Explore"
     ),
     NavigationItem(
         title = "Camara",
         selectedIcon = Icons.Filled.Create,
         unselectedIcon = Icons.Outlined.Create,
-        hasNews = false
+        hasNews = false,
+        route = "MainActivity"
     ),
     NavigationItem(
         title = "MySaves",
         selectedIcon = Icons.Filled.Favorite,
         unselectedIcon = Icons.Outlined.FavoriteBorder,
-        hasNews = false
+        hasNews = false,
+        route = "MySave"
     ),
     NavigationItem(
         title = "Account",
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.Person,
-        hasNews = false
+        hasNews = false,
+        route = "MainActivity"
     )
 )
 
 @Composable
-fun BottomNavigation(activityIndex:Int){
+fun BottomNavigation(activityIndex:Int,navController: NavHostController){
     var selectedItemIndex by rememberSaveable {
-        mutableStateOf(activityIndex)
+        mutableIntStateOf(activityIndex)
     }
     NavigationBar {
         item.forEachIndexed{
@@ -232,7 +258,7 @@ fun BottomNavigation(activityIndex:Int){
                 selected = selectedItemIndex == index,
                 onClick = {
                     selectedItemIndex = index
-                    //nav controller
+                    navController.navigate(items.route)
                 },
                 label = { Text(text = items.title) },
                 icon = {
@@ -241,7 +267,8 @@ fun BottomNavigation(activityIndex:Int){
                             items.selectedIcon
                         } else items.unselectedIcon,
                         contentDescription = null,
-                        tint = Color(red = 20, green = 140,83)
+                        tint = Color(red = 20, green = 140,83),
+                        modifier = Modifier.size(35.dp)
                     )
                 })
             }else{
@@ -250,34 +277,11 @@ fun BottomNavigation(activityIndex:Int){
                     contentDescription = null,
                     alignment = Alignment.Center,
                     modifier = Modifier
-                        .size(50    .dp)
+                        .size(60.dp)
                         .align(Alignment.CenterVertically)
                         .fillMaxHeight()
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FruitHubTheme {
-        Scaffold(
-            bottomBar = { BottomNavigation(0) }
-        ) { innerPadding ->
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                ArticlesHome(articleTitle = "Watermelon – Juicy and Refreshing Summer Favorite")
-                FruitCard("Banana")
-                FruitCard()
-                ArticlesExplore("Watermelon – Juicy and Refreshing Summer Favorite")
-            }
-
-        }
-
     }
 }

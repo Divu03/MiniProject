@@ -13,21 +13,28 @@
         android:theme="@style/Theme.FruitHub"
         tools:targetApi="31">
         <activity
+            android:name=".MySave"
+            android:exported="true"
+            android:label="@string/title_activity_my_save"
+            android:theme="@style/Theme.FruitHub">
+        </activity>
+
+        <activity
             android:name=".Explore"
             android:exported="true"
             android:label="@string/title_activity_explore"
+            android:theme="@style/Theme.FruitHub">
+
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
             android:theme="@style/Theme.FruitHub">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.FruitHub">
-
         </activity>
     </application>
 
