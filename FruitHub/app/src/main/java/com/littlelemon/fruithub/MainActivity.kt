@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -36,9 +36,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
             FruitHubTheme {
                 Scaffold(
-                    bottomBar = { BottomNavigation() }
+                    bottomBar = { BottomNavigation(0) }
                 ) { innerPadding ->
                     Column(
                         Modifier
@@ -183,6 +185,8 @@ data class NavigationItem(
     val hasNews: Boolean,
     val badgeCount: Int? = 0
 )
+
+
 val item = listOf(
     NavigationItem(
         title = "Home",
@@ -217,28 +221,40 @@ val item = listOf(
 )
 
 @Composable
-fun BottomNavigation(){
+fun BottomNavigation(activityIndex:Int){
     var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
+        mutableStateOf(activityIndex)
     }
     NavigationBar {
         item.forEachIndexed{
-            index, items ->
+            index, items ->if (index!=2) {
             NavigationBarItem(
                 selected = selectedItemIndex == index,
                 onClick = {
-                          selectedItemIndex = index
+                    selectedItemIndex = index
                     //nav controller
                 },
                 label = { Text(text = items.title) },
                 icon = {
                     Icon(
-                        imageVector = if(selectedItemIndex == index){
+                        imageVector = if (selectedItemIndex == index) {
                             items.selectedIcon
-                        }else items.unselectedIcon,
-                        contentDescription = null
+                        } else items.unselectedIcon,
+                        contentDescription = null,
+                        tint = Color(red = 20, green = 140,83)
                     )
                 })
+            }else{
+                Image(
+                    painter = painterResource(R.drawable.icon_camara),
+                    contentDescription = null,
+                    alignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(50    .dp)
+                        .align(Alignment.CenterVertically)
+                        .fillMaxHeight()
+                )
+            }
         }
     }
 }
@@ -248,7 +264,7 @@ fun BottomNavigation(){
 fun GreetingPreview() {
     FruitHubTheme {
         Scaffold(
-            bottomBar = { BottomNavigation() }
+            bottomBar = { BottomNavigation(0) }
         ) { innerPadding ->
             Column(
                 Modifier
