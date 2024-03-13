@@ -28,10 +28,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.littlelemon.fruithub.ui.theme.FruitHubTheme
 
-class MySave(private val navController: NavHostController) : ComponentActivity() {
+class MySave : ComponentActivity() {
     private val switchViewModel by viewModels<SwitchViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +46,7 @@ class MySave(private val navController: NavHostController) : ComponentActivity()
                             SavedButton(switchViewModel)
                         }
                     }, bottomBar = {
-                        BottomNavigation(activityIndex = 3, navController = navController)
+                        BottomNavigation(activityIndex = 3)
                     }
                 ) { innerPadding ->
                     Column(

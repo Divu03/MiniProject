@@ -32,10 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.littlelemon.fruithub.ui.theme.FruitHubTheme
 
-class Explore(private val navController: NavHostController) : ComponentActivity() {
+class Explore : ComponentActivity() {
 
     private val switchViewModel by viewModels<SwitchViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +46,7 @@ class Explore(private val navController: NavHostController) : ComponentActivity(
                         TopExplore(switchViewModel)
                     },
                     bottomBar = {
-                        BottomNavigation(1,navController)
+                        BottomNavigation(1)
                     }
                 ) {
                         innerPadding ->
@@ -164,3 +163,29 @@ fun TopExplore(switchViewModel: SwitchViewModel){
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview2() {
+    FruitHubTheme {
+        Scaffold(
+            topBar = {
+                     //TopExplore(false)
+            },
+            bottomBar = {
+                BottomNavigation(1)
+            }
+        ) {
+            innerPadding ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                ArticlesExplore()
+            }
+        }
+
+    }
+}
