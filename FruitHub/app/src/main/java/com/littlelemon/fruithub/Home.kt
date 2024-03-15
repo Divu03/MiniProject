@@ -3,6 +3,7 @@ package com.littlelemon.fruithub
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,8 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -31,23 +35,21 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
@@ -197,7 +199,6 @@ val item = listOf(
 
 @Composable
 fun BottomNavigation(activityIndex: Int, navController: NavController){
-    //var selectedItemIndex by rememberSaveable {        mutableIntStateOf(activityIndex)    }
     var selectedItemIndex = activityIndex
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -243,4 +244,253 @@ fun BottomNavigation(activityIndex: Int, navController: NavController){
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun TopComponent(){
+    Row(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painterResource(id = R.drawable.icon_app),
+            contentDescription = null,
+            Modifier
+                .size(40.dp,46.dp)
+        )
+        Text(
+            text = "FruitHub",
+            fontFamily = FontFamily(
+                Font(resId = R.font.jaldi_bold,
+                    FontWeight.Bold)
+            ),
+            fontSize = 28.sp
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PopularArticles(){
+    Column(
+        Modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp)
+        ) {
+            Text(
+                text = "Popular Articles",
+                fontFamily = FontFamily(
+                    Font(resId = R.font.jaldi_bold,
+                        FontWeight.Bold)
+                ),
+                fontSize = 20.sp
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "View All",
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.jaldi_bold,
+                            FontWeight.Bold
+                        )
+                    ),
+                    fontSize = 16.sp,
+                    color = Color(20,140,83)
+                )
+                Image(
+                    Icons.AutoMirrored.Filled.ArrowForward,
+                    null,
+                    colorFilter = ColorFilter.tint(Color(20,140,83))
+                )
+            }
+        }
+        Row(
+            Modifier.horizontalScroll(rememberScrollState())
+        ) {
+            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon")
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun ExploreFruit(){
+    Column(
+        Modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp)
+        ) {
+            Text(
+                text = "Explore Fruits",
+                fontFamily = FontFamily(
+                    Font(resId = R.font.jaldi_bold,
+                        FontWeight.Bold)
+                ),
+                fontSize = 20.sp
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "View All",
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.jaldi_bold,
+                            FontWeight.Bold
+                        )
+                    ),
+                    fontSize = 16.sp,
+                    color = Color(20,140,83)
+                )
+                Image(
+                    Icons.AutoMirrored.Filled.ArrowForward,
+                    null,
+                    colorFilter = ColorFilter.tint(Color(20,140,83))
+                )
+            }
+        }
+        Row(
+            Modifier.horizontalScroll(rememberScrollState())
+        ) {
+            FruitCard()
+            FruitCard()
+            FruitCard()
+            FruitCard()
+            FruitCard()
+            FruitCard()
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun RecentFruit(){
+    Column(
+        Modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp)
+        ) {
+            Text(
+                text = "Recent Fruits",
+                fontFamily = FontFamily(
+                    Font(resId = R.font.jaldi_bold,
+                        FontWeight.Bold)
+                ),
+                fontSize = 20.sp
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "View All",
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.jaldi_bold,
+                            FontWeight.Bold
+                        )
+                    ),
+                    fontSize = 16.sp,
+                    color = Color(20,140,83)
+                )
+                Image(
+                    Icons.AutoMirrored.Filled.ArrowForward,
+                    null,
+                    colorFilter = ColorFilter.tint(Color(20,140,83))
+                )
+            }
+        }
+        Row(
+            Modifier.horizontalScroll(rememberScrollState())
+        ) {
+            FruitCard()
+            FruitCard()
+            FruitCard()
+            FruitCard()
+            FruitCard()
+            FruitCard()
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun RecentArticles(){
+    Column(
+        Modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp)
+        ) {
+            Text(
+                text = "Recent Articles",
+                fontFamily = FontFamily(
+                    Font(resId = R.font.jaldi_bold,
+                        FontWeight.Bold)
+                ),
+                fontSize = 20.sp
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "View All",
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.jaldi_bold,
+                            FontWeight.Bold
+                        )
+                    ),
+                    fontSize = 16.sp,
+                    color = Color(20,140,83)
+                )
+                Image(
+                    Icons.AutoMirrored.Filled.ArrowForward,
+                    null,
+                    colorFilter = ColorFilter.tint(Color(20,140,83))
+                )
+            }
+        }
+        Row(
+            Modifier.horizontalScroll(rememberScrollState())
+        ) {
+            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon")
+        }
+    }
+
 }

@@ -3,10 +3,14 @@ package com.littlelemon.fruithub
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -37,20 +41,23 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
     }
 }
 
+
 @Composable
 fun MainActivityScreen(navController: NavController) {
     Scaffold(
-        bottomBar = { BottomNavigation(0,navController) }
+        bottomBar = { BottomNavigation(0,navController) },
+        topBar = { TopComponent()}
     ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
-            ArticlesHome(articleTitle = "Watermelon – Juicy and Refreshing Summer Favorite")
-            FruitCard("Banana")
-            FruitCard()
-            ArticlesExplore("Watermelon – Juicy and Refreshing Summer Favorite")
+            PopularArticles()
+            ExploreFruit()
+            RecentFruit()
+            RecentArticles()
         }
     }
 }
@@ -88,4 +95,16 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
 fun CameraScreen(){}
 
 @Composable
-fun UserScreen(){}
+fun UserScreen(navController: NavController){
+    Scaffold(
+        bottomBar = { BottomNavigation(4,navController) }
+    ) { innerPadding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Text(text = "UserScreen")
+        }
+    }
+}
