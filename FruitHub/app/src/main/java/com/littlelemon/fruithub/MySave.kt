@@ -1,20 +1,14 @@
 package com.littlelemon.fruithub
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -28,44 +22,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.littlelemon.fruithub.ui.theme.FruitHubTheme
-
-class MySave : ComponentActivity() {
-    private val switchViewModel by viewModels<SwitchViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            FruitHubTheme {
-                Scaffold(
-                    topBar = {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(5.dp)
-                        ){
-                            TopSaves()
-                            SavedButton(switchViewModel)
-                        }
-                    }, bottomBar = {
-                        BottomNavigation(activityIndex = 3)
-                    }
-                ) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                    ) {
-                        if (switchViewModel.selectedIndex == 0){
-                            FruitCard()
-                        }
-                        else{
-                            ArticlesExplore()
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun TopSaves(){
@@ -98,14 +54,14 @@ fun TopSaves(){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavedButton(switchViewModel: SwitchViewModel){
+fun SavedButton(fruitHubViewModel: FruitHubViewModel){
     val options = mutableListOf("Fruits","Articles")
 
     SingleChoiceSegmentedButtonRow {
         options.forEachIndexed{ index, option ->
             SegmentedButton(
-                selected = switchViewModel.selectedIndex == index,
-                onClick = { switchViewModel.selectedIndex = index },
+                selected = fruitHubViewModel.selectedIndex == index,
+                onClick = { fruitHubViewModel.selectedIndex = index },
                 shape = SegmentedButtonDefaults.itemShape(
                     index = index,
                     count = options.size

@@ -1,9 +1,5 @@
 package com.littlelemon.fruithub
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
@@ -18,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,48 +23,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.littlelemon.fruithub.ui.theme.FruitHubTheme
-
-class Explore : ComponentActivity() {
-
-    private val switchViewModel by viewModels<SwitchViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            FruitHubTheme {
-                Scaffold(
-                    topBar = {
-                        TopExplore(switchViewModel)
-                    },
-                    bottomBar = {
-                        BottomNavigation(1)
-                    }
-                ) {
-                        innerPadding ->
-                    Column(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        if(switchViewModel.switchState){
-                            ArticlesExplore()
-                        }else{
-                            FruitCard()
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 @Composable
-fun ArticlesExplore(articleTitle: String = "hi", articleImageId: Int = R.drawable.watermelon_article){
+fun ArticlesExplore(
+    articleTitle: String = "hi",
+    articleImageId: Int = R.drawable.watermelon_article
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -129,7 +89,7 @@ fun ArticlesExplore(articleTitle: String = "hi", articleImageId: Int = R.drawabl
 
 
 @Composable
-fun TopExplore(switchViewModel: SwitchViewModel){
+fun TopExplore(fruitHubViewModel: FruitHubViewModel){
     Row (
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -147,10 +107,10 @@ fun TopExplore(switchViewModel: SwitchViewModel){
             fontSize = 24.sp,
         )
         Switch(
-            checked = switchViewModel.switchState,
+            checked = fruitHubViewModel.switchState,
             onCheckedChange = { checked ->
-                switchViewModel.switchState = checked },
-            thumbContent = if(!switchViewModel.switchState){
+                fruitHubViewModel.switchState = checked },
+            thumbContent = if(!fruitHubViewModel.switchState){
                 {
                     Modifier.size(24.dp)
                 }
@@ -158,34 +118,5 @@ fun TopExplore(switchViewModel: SwitchViewModel){
                 null
             }
         )
-    }
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    FruitHubTheme {
-        Scaffold(
-            topBar = {
-                     //TopExplore(false)
-            },
-            bottomBar = {
-                BottomNavigation(1)
-            }
-        ) {
-            innerPadding ->
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                ArticlesExplore()
-            }
-        }
-
     }
 }
