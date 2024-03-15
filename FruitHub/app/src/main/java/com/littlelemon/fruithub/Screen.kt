@@ -10,16 +10,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 
 @Composable
 fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController){
     Scaffold(
         topBar = {
-            TopExplore(fruitHubViewModel)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(5.dp)
+            ){
+                TopExplore(fruitHubViewModel)
+                SearchBar()
+            }
         },
         bottomBar = {
             BottomNavigation(1, navController)
@@ -32,10 +36,10 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            if(fruitHubViewModel.switchState){
+            if(fruitHubViewModel.switchStateExplore){
                 ArticlesExplore()
             }else{
-                FruitCard()
+                FruitsExplore()
             }
         }
     }
@@ -70,19 +74,21 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(5.dp)
             ){
-                TopSaves()
-                SavedButton(fruitHubViewModel)
+                TopSaves(fruitHubViewModel)
+                SearchBar()
             }
         }, bottomBar = {
             BottomNavigation(activityIndex = 3,navController)
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (fruitHubViewModel.selectedIndex == 0){
-                FruitCard()
+            if (!fruitHubViewModel.switchStateSaves){
+                FruitsSaved()
             }
             else{
                 ArticlesExplore()

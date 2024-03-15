@@ -1,38 +1,49 @@
 package com.littlelemon.fruithub
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
 @Composable
-fun TopSaves(){
+fun TopSaves(fruitHubViewModel: FruitHubViewModel){
     Row (
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .padding(25.dp, 0.dp)
     ){
-        Image(painter = painterResource(id = R.drawable.icon_back), contentDescription = null)
+        Image(
+            painter = painterResource(id = R.drawable.icon_back),
+            contentDescription = null,
+            alignment = Alignment.CenterStart
+        )
         Text(
             text = "My Saves",
             fontFamily = FontFamily(
@@ -40,37 +51,35 @@ fun TopSaves(){
                     FontWeight.Bold)
             ),
             fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
-        Image(
-            imageVector = Icons.Default.Search,
-            contentDescription = null,
-            Modifier.clickable() {
-
+        Switch(
+            checked = fruitHubViewModel.switchStateSaves,
+            onCheckedChange = { checked ->
+                fruitHubViewModel.switchStateSaves = checked },
+            thumbContent = if(!fruitHubViewModel.switchStateSaves){
+                {
+                    Modifier.size(24.dp)
+                }
+            }else{
+                null
             }
         )
     }
 }
-
-
-@OptIn(ExperimentalMaterial3Api::class)
+val savedfruits : List<String> = listOf("Watermelon","Apple","Apple","Apple","Apple","Banana","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple")
+@Preview
 @Composable
-fun SavedButton(fruitHubViewModel: FruitHubViewModel){
-    val options = mutableListOf("Fruits","Articles")
-
-    SingleChoiceSegmentedButtonRow {
-        options.forEachIndexed{ index, option ->
-            SegmentedButton(
-                selected = fruitHubViewModel.selectedIndex == index,
-                onClick = { fruitHubViewModel.selectedIndex = index },
-                shape = SegmentedButtonDefaults.itemShape(
-                    index = index,
-                    count = options.size
-                ),
-                Modifier.padding(0.dp,10.dp),
-
-            ) {
-                Text(text = option)
-            }
+fun FruitsSaved() {
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalItemSpacing = 10.dp,
+        contentPadding = PaddingValues(10.dp)
+    ){
+        items(savedfruits) { item->
+            FruitCard(item)
         }
     }
 }

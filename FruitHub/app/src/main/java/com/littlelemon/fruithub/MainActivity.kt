@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     UserScreen.route
                 ){
                     composable("User"){
-
+                        UserScreen(navController)
                     }
                 }
             }

@@ -5,12 +5,16 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -23,6 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -92,12 +98,15 @@ fun ArticlesExplore(
 fun TopExplore(fruitHubViewModel: FruitHubViewModel){
     Row (
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .padding(25.dp, 0.dp)
     ){
-        Image(painter = painterResource(id = R.drawable.icon_back), contentDescription = null)
+        Image(
+            painter = painterResource(id = R.drawable.icon_back),
+            contentDescription = null,
+            alignment = Alignment.CenterStart
+        )
         Text(
             text = "Explore",
             fontFamily = FontFamily(
@@ -105,18 +114,40 @@ fun TopExplore(fruitHubViewModel: FruitHubViewModel){
                     FontWeight.Bold)
             ),
             fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
         Switch(
-            checked = fruitHubViewModel.switchState,
+            checked = fruitHubViewModel.switchStateExplore,
             onCheckedChange = { checked ->
-                fruitHubViewModel.switchState = checked },
-            thumbContent = if(!fruitHubViewModel.switchState){
+                fruitHubViewModel.switchStateExplore = checked },
+            thumbContent = if(!fruitHubViewModel.switchStateExplore){
                 {
                     Modifier.size(24.dp)
                 }
             }else{
                 null
-            }
+            },
+            modifier = Modifier
+                .padding(0.dp,0.dp,20.dp,0.dp)
         )
+    }
+}
+
+
+val fruitlist : List<String> = listOf("Watermelon","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple")
+
+@Preview
+@Composable
+fun FruitsExplore() {
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalItemSpacing = 10.dp,
+        contentPadding = PaddingValues(10.dp)
+        ){
+        items(fruitlist) { item->
+            FruitCard(item)
+        }
     }
 }
