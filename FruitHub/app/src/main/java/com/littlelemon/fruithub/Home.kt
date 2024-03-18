@@ -51,6 +51,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -97,7 +98,8 @@ fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermel
                     fontSize = 14.sp,
                     modifier = Modifier
                         .size(179.dp, 44.dp)
-                        .verticalScroll(ScrollState(1))
+                        .verticalScroll(ScrollState(1)),
+                    overflow = TextOverflow.Ellipsis
                 )
                 Image(
                     painter = painterResource(
@@ -143,7 +145,8 @@ fun FruitCard(
                 fontSize = 14.sp,
                 modifier = Modifier
                     .size(81.dp, 107.dp)
-                    .padding(5.dp, 15.dp, 0.dp, 0.dp)
+                    .padding(5.dp, 15.dp, 0.dp, 0.dp),
+                overflow = TextOverflow.Visible
             )
             Image(
                 painter = painterResource(id = fruitImageId),
@@ -252,7 +255,7 @@ fun BottomNavigation(activityIndex: Int, navController: NavController){
     }
 }
 
-@Preview
+
 @Composable
 fun TopComponent(){
     Row(

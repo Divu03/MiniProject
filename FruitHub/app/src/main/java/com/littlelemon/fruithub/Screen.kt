@@ -1,7 +1,10 @@
 package com.littlelemon.fruithub
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -103,14 +106,25 @@ fun CameraScreen(){}
 @Composable
 fun UserScreen(navController: NavController){
     Scaffold(
-        bottomBar = { BottomNavigation(4,navController) }
+        bottomBar = { BottomNavigation(4,navController) },
+        topBar = { UserTopComponent()}
     ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Text(text = "UserScreen")
+            UserInfo()
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp))
+            OptionAccount("Logout")
+            OptionAccount()
+            OptionAccount()
+            OptionAccount()
+            OptionAccount()
+            OptionAccount()
+
         }
     }
 }
