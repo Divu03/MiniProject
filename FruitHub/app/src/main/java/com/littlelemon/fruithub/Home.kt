@@ -3,15 +3,21 @@ package com.littlelemon.fruithub
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -516,4 +522,109 @@ fun SearchBar(){
             .padding(horizontal = 30.dp, vertical = 5.dp),
         shape = RoundedCornerShape(20.dp)
     )
+}
+
+@Composable
+fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R.drawable.icon_app){
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+        modifier = Modifier
+            .height(70.dp)
+            .fillMaxWidth(.45f)
+            .padding(5.dp)
+    ) {
+        Row(
+            Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.icon_camara),
+                contentDescription = null,
+                Modifier
+                    .fillMaxWidth(.2f)
+                    .padding(5.dp)
+                    .size(26.dp)
+            )
+            Column {
+                Text(
+                    text = cardTitle,
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.jaldi_regular,
+                            FontWeight.Normal
+                        )
+                    ),
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp, 0.dp),
+                    color = Color(145, 121, 121),
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = cardValue,
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.jaldi_bold,
+                            FontWeight.Normal
+                        )
+                    ),
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp, 0.dp)
+                        .height(25.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun InfoText(){
+    Column {
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.icon_explore_outline),
+                contentDescription = null,
+                Modifier
+                    .size(24.dp)
+            )
+            Text(
+                text = "cardValue",
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.jaldi_bold,
+                        FontWeight.Normal
+                    )
+                ),
+                fontSize = 22.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp, 0.dp),
+            )
+        }
+        Spacer(modifier = Modifier.size(10.dp))
+        Text(
+            text = "cardTitle shdG;H Oiheg uh'SEGF EHRGU S';DIJV 'HAE'ISHF ;SHG'A IG'SIOGHA GRHIAJ isj 'gagha 'iga' isdg'iajergh aig ahgi aigj;reahg; uhg a'ihga;ugb ;sdfguo;hlkkrjgashe djd",
+            fontFamily = FontFamily(
+                Font(
+                    resId = R.font.jaldi_regular,
+                    FontWeight.Normal
+                )
+            ),
+            fontSize = 16.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp, 0.dp)
+                .height(90.dp),
+            color = Color(145, 121, 121),
+            overflow = TextOverflow.Ellipsis
+        )
+    }
 }
