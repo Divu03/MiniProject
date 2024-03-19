@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -122,5 +125,36 @@ fun OptionAccount(oName:String ="Option name", imageIDN: Int =R.drawable.icon_ap
                 .fillMaxWidth(.8F),
         )
         Image(Icons.AutoMirrored.Filled.KeyboardArrowRight, null)
+    }
+}
+
+@Preview
+@Composable
+fun LogOut(){
+    Row (
+        Modifier
+            .fillMaxWidth()
+            .height(65.dp),
+        horizontalArrangement = Arrangement.spacedBy(25.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Icon(
+            Icons.AutoMirrored.Filled.ExitToApp,
+            contentDescription = null,
+            Modifier.size(50.dp).padding(10.dp,0.dp),
+            tint = Color.Red
+        )
+        Text(
+            text = "Logout",
+            fontFamily = FontFamily(
+                Font(resId = R.font.jaldi_bold,
+                    FontWeight.Normal)
+            ),
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(5.dp, 0.dp)
+                .fillMaxWidth(),
+            color = Color.Red
+        )
     }
 }

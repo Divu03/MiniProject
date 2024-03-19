@@ -124,6 +124,7 @@ fun UserScreen(navController: NavController){
             OptionAccount()
             OptionAccount()
             OptionAccount()
+            LogOut()
 
         }
     }
