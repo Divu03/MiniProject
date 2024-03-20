@@ -70,6 +70,9 @@ class MainActivity : ComponentActivity() {
                         UserScreen(navController)
                     }
                 }
+                composable("fInfo"){
+                    FruitInfoScreen()
+                }
             }
         }
     }

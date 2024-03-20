@@ -583,20 +583,21 @@ fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R
 }
 
 @Composable
-fun InfoText(){
+fun InfoText(iconId: Int= R.drawable.icon_description,titleInfo:String="Title",valueInfo:String="upcoming"){
     Column {
         Row (
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Image(
-                painter = painterResource(id = R.drawable.icon_explore_outline),
+                painter = painterResource(id = iconId),
                 contentDescription = null,
                 Modifier
-                    .size(24.dp)
+                    .size(44.dp)
+                    .padding(10.dp, 0.dp)
             )
             Text(
-                text = "cardValue",
+                text = titleInfo,
                 fontFamily = FontFamily(
                     Font(
                         resId = R.font.jaldi_bold,
@@ -606,12 +607,12 @@ fun InfoText(){
                 fontSize = 22.sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp, 0.dp),
+                    .padding(15.dp, 0.dp),
             )
         }
         Spacer(modifier = Modifier.size(10.dp))
         Text(
-            text = "cardTitle shdG;H Oiheg uh'SEGF EHRGU S';DIJV 'HAE'ISHF ;SHG'A IG'SIOGHA GRHIAJ isj 'gagha 'iga' isdg'iajergh aig ahgi aigj;reahg; uhg a'ihga;ugb ;sdfguo;hlkkrjgashe djd",
+            text = valueInfo,
             fontFamily = FontFamily(
                 Font(
                     resId = R.font.jaldi_regular,
