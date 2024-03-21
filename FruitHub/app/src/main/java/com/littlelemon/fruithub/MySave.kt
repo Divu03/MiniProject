@@ -10,25 +10,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 
 @Composable
@@ -71,7 +66,7 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel){
 val savedfruits : List<String> = listOf("Watermelon","Apple","Apple","Apple","Apple","Banana","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple")
 @Preview
 @Composable
-fun FruitsSaved() {
+fun FruitsSaved(navController:NavController) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -79,7 +74,7 @@ fun FruitsSaved() {
         contentPadding = PaddingValues(10.dp)
     ){
         items(savedfruits) { item->
-            FruitCard(item)
+            FruitCard(navController,item)
         }
     }
 }

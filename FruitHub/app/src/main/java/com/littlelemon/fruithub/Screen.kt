@@ -1,29 +1,21 @@
 package com.littlelemon.fruithub
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
@@ -52,7 +44,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
             if(fruitHubViewModel.switchStateExplore){
                 ArticlesExplore()
             }else{
-                FruitsExplore()
+                FruitsExplore(navController)
             }
         }
     }
@@ -72,8 +64,8 @@ fun MainActivityScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState())
         ) {
             PopularArticles()
-            ExploreFruit()
-            RecentFruit()
+            ExploreFruit(navController)
+            RecentFruit(navController)
             RecentArticles()
         }
     }
@@ -101,7 +93,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (!fruitHubViewModel.switchStateSaves){
-                FruitsSaved()
+                FruitsSaved(navController)
             }
             else{
                 ArticlesExplore()
@@ -156,40 +148,13 @@ fun FruitInfoScreen(){
                 .padding(10.dp)
                 .height(240.dp)
         )
-        Column {
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ){
-                Image(
-                    painterResource(R.drawable.photo_gallary),
-                    contentDescription = null,
-                    Modifier
-                        .size(44.dp)
-                        .padding(10.dp, 0.dp)
-                )
-                Text(
-                    text = "Photo Gallery",
-                    fontFamily = FontFamily(
-                        Font(
-                            resId = R.font.jaldi_bold,
-                            FontWeight.Normal
-                        )
-                    ),
-                    fontSize = 22.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp, 0.dp),
-                )
-            }
-            Spacer(modifier = Modifier.size(10.dp))
-            PhotoGallery()
-            InfoText(R.drawable.icon_description,"Description")
-            InfoText(R.drawable.icon_description,"Common Pests & Diseases")
-            InfoText(R.drawable.icon_description,"Special Features")
-            InfoText(R.drawable.icon_description,"Uses")
-            InfoText(R.drawable.icon_description,"Fun Facts")
-        }
+        InfoText(R.drawable.icon_description,"Description")
+        InfoGrid()
+        InfoGrid()
+        InfoGrid()
+        InfoText(R.drawable.icon_description,"Common Pests & Diseases")
+        InfoText(R.drawable.icon_description,"Special Features")
+        InfoText(R.drawable.icon_description,"Uses")
+        InfoText(R.drawable.icon_description,"Fun Facts")
     }
 }

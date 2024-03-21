@@ -122,8 +122,9 @@ fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermel
 
 @Composable
 fun FruitCard(
+    navController: NavController,
     fruitName: String = "Watermelon",
-    fruitImageId: Int = R.drawable.watermelon,
+    fruitImageId: Int = R.drawable.watermelon
 ){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -132,6 +133,9 @@ fun FruitCard(
         modifier = Modifier
             .size(width = 162.dp, height = 107.dp)
             .padding(10.dp),
+        onClick = {
+            navController.navigate("fInfo")
+        }
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -339,7 +343,9 @@ fun PopularArticles(){
 
 
 @Composable
-fun ExploreFruit(){
+fun ExploreFruit(
+    navController: NavController
+){
     Column(
         Modifier
             .fillMaxWidth()
@@ -383,12 +389,12 @@ fun ExploreFruit(){
         Row(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
-            FruitCard()
-            FruitCard()
-            FruitCard()
-            FruitCard()
-            FruitCard()
-            FruitCard()
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
         }
     }
 
@@ -396,7 +402,7 @@ fun ExploreFruit(){
 
 
 @Composable
-fun RecentFruit(){
+fun RecentFruit(navController: NavController){
     Column(
         Modifier
             .fillMaxWidth()
@@ -440,12 +446,12 @@ fun RecentFruit(){
         Row(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
-            FruitCard()
-            FruitCard()
-            FruitCard()
-            FruitCard()
-            FruitCard()
-            FruitCard()
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
+            FruitCard(navController)
         }
     }
 
@@ -626,32 +632,62 @@ fun InfoText(iconId: Int= R.drawable.icon_description,titleInfo:String="Title",v
     }
 }
 
+@Preview
 @Composable
 fun PhotoGallery(){
-    Row(
-        Modifier.horizontalScroll(rememberScrollState())
-    ){
-        Image(
-            painter = painterResource(id = R.drawable.strawberry_info),
-            contentDescription = null,
-            Modifier
-                .height(155.dp)
-                .padding(10.dp)
-        )
-        Image(
-            painter = painterResource(id = R.drawable.strawberry_info),
-            contentDescription = null,
-            Modifier
-                .height(155.dp)
-                .padding(10.dp)
-        )
-        Image(
-            painter = painterResource(id = R.drawable.strawberry_info),
-            contentDescription = null,
-            Modifier
-                .height(155.dp)
-                .padding(10.dp)
-        )
+    Column {
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ){
+            Image(
+                painterResource(R.drawable.photo_gallary),
+                contentDescription = null,
+                Modifier
+                    .size(44.dp)
+                    .padding(10.dp, 0.dp)
+            )
+            Text(
+                text = "Photo Gallery",
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.jaldi_bold,
+                        FontWeight.Normal
+                    )
+                ),
+                fontSize = 22.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp, 0.dp),
+            )
+        }
+        Spacer(modifier = Modifier.size(10.dp))
+        Row(
+            Modifier.horizontalScroll(rememberScrollState())
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.strawberry_info),
+                contentDescription = null,
+                Modifier
+                    .height(155.dp)
+                    .padding(10.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.strawberry_info),
+                contentDescription = null,
+                Modifier
+                    .height(155.dp)
+                    .padding(10.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.strawberry_info),
+                contentDescription = null,
+                Modifier
+                    .height(155.dp)
+                    .padding(10.dp)
+            )
+        }
     }
 }
 
@@ -661,7 +697,31 @@ fun InfoGrid(){
     Column(
         Modifier.fillMaxWidth(),
     ) {
-
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.icon_description),
+                contentDescription = null,
+                Modifier
+                    .size(44.dp)
+                    .padding(10.dp, 0.dp)
+            )
+            Text(
+                text = "titleInfo",
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.jaldi_bold,
+                        FontWeight.Normal
+                    )
+                ),
+                fontSize = 22.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp, 0.dp),
+            )
+        }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
