@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.littlelemon.fruithub.dao.FruitDataRoom
 
 @Composable
 fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermelon_article){
@@ -693,7 +694,7 @@ fun PhotoGallery(){
 
 @Preview
 @Composable
-fun InfoGrid(){
+fun InfoGrid(titleList: List<String>,valueList: List<String>){
     Column(
         Modifier.fillMaxWidth(),
     ) {
@@ -726,22 +727,22 @@ fun InfoGrid(){
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard()
-            InfoCard()
+            InfoCard(titleList[0],valueList[0])
+            InfoCard(titleList[1],valueList[1])
         }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard()
-            InfoCard()
+            InfoCard(titleList[2],valueList[2])
+            InfoCard(titleList[3],valueList[3])
         }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard()
-            InfoCard()
+            InfoCard(titleList[4],valueList[6])
+            InfoCard(titleList[5],valueList[5])
         }
     }
 }

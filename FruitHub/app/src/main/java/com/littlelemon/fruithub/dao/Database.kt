@@ -1,10 +1,16 @@
 package com.littlelemon.fruithub.dao
 
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Database
 import androidx.room.Entity
+import androidx.room.Insert
 import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.RoomDatabase
 
 @Entity
-data class FruitData(
+data class FruitDataRoom(
     @PrimaryKey val id: Int,
     val name:String,
 
@@ -35,3 +41,26 @@ data class FruitData(
     val carbs:String,
     val fat:String,
 )
+
+@Dao
+interface FruitDataDao{
+
+    @Query("SELECT * FROM FruitDataRoom")
+    fun getAll():LiveData<FruitDataRoom>
+
+    @Query("SELECT * FROM FruitDataRoom WHERE name = :name")
+    fun getByName(name: String): LiveData<FruitDataRoom>
+
+    @Insert
+    fun insertAll(fruitData: FruitDataRoom)
+
+    @Query("SELECT (SELECT COUNT(*) FROM FruitDataRoom) == 0")
+    fun isEmpty(): Boolean
+
+
+}
+
+@Database(entities = [FruitDataRoom::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun fruitDataDao(): FruitDataDao
+}

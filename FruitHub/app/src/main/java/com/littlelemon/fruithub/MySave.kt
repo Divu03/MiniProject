@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -64,7 +63,7 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel){
     }
 }
 val savedfruits : List<String> = listOf("Watermelon","Apple","Apple","Apple","Apple","Banana","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple")
-@Preview
+
 @Composable
 fun FruitsSaved(navController:NavController) {
     LazyVerticalStaggeredGrid(

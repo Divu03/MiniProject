@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "820227939272",
+    "project_id": "fruithub-33482",
+    "storage_bucket": "fruithub-33482.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820227939272:android:446be8c47a6e5ef14cbefd",
+        "android_client_info": {
+          "package_name": "com.littlelemon.fruithub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMcP1vaKInDQEo7IoyPPp2TXSz__VEOaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
