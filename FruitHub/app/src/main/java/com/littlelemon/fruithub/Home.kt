@@ -692,7 +692,6 @@ fun PhotoGallery(){
     }
 }
 
-@Preview
 @Composable
 fun InfoGrid(titleList: List<String>,valueList: List<String>){
     Column(
