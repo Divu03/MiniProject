@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -107,4 +108,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
 
     ksp("androidx.room:room-compiler:2.6.1")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation("com.google.firebase:firebase-analytics")
 }
