@@ -3,8 +3,6 @@ package com.littlelemon.fruithub
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,14 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -532,8 +528,8 @@ fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R
         ),
         modifier = Modifier
             .height(70.dp)
-            .fillMaxWidth(.45f)
-            .padding(5.dp)
+            .width(190.dp)
+            .padding(10.dp,5.dp)
     ) {
         Row(
             Modifier.fillMaxSize(),
@@ -627,5 +623,65 @@ fun InfoText(iconId: Int= R.drawable.icon_description,titleInfo:String="Title",v
             color = Color(145, 121, 121),
             overflow = TextOverflow.Ellipsis
         )
+    }
+}
+
+@Composable
+fun PhotoGallery(){
+    Row(
+        Modifier.horizontalScroll(rememberScrollState())
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.strawberry_info),
+            contentDescription = null,
+            Modifier
+                .height(155.dp)
+                .padding(10.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.strawberry_info),
+            contentDescription = null,
+            Modifier
+                .height(155.dp)
+                .padding(10.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.strawberry_info),
+            contentDescription = null,
+            Modifier
+                .height(155.dp)
+                .padding(10.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun InfoGrid(){
+    Column(
+        Modifier.fillMaxWidth(),
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            InfoCard()
+            InfoCard()
+        }
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            InfoCard()
+            InfoCard()
+        }
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            InfoCard()
+            InfoCard()
+        }
     }
 }

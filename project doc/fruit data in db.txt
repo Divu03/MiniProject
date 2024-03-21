@@ -1,0 +1,92 @@
+Cautions/Toxicity
+"Non-toxic."
+(string)
+
+
+Common_pests
+"anthracnose and root rot can also occur"
+(string)
+
+
+Description
+"Carambola, also known as star fruit, is a tropical fruit-bearing tree belonging to the Oxalidaceae family"
+(string)
+
+
+Fertilizers
+"every 4-6 weeks "
+(string)
+
+
+Fun_Facts
+"Carambola trees are native to Southeast Asia but are now cultivated in tropical regions worldwide. "
+(string)
+
+
+Growth_Rate
+"Moderate"
+(string)
+
+
+Hardiness_Zone
+"10 to 11"
+(string)
+
+
+Humidity
+"High"
+(string)
+
+
+Name
+"Carambula"
+(string)
+
+
+Propagation
+"propagated from seeds or through grafting onto rootstock."
+(string)
+
+
+Pruning
+"Early spring"
+(string)
+
+
+Repotting
+"Not applicable"
+(string)
+
+
+Soil
+"Well-draining, sandy loam soil "
+(string)
+
+
+Special_Features
+"containing high levels of vitamin C, fiber, and antioxidants"
+(string)
+
+
+Sunlight
+"require full sunlight to partial shade"
+(string)
+
+
+Temperature
+"65°F to 95°F (18°C to 35°C)."
+(string)
+
+
+Uses
+"Carambola fruits can be eaten fresh or used in various culinary applications, including salads, fruit cocktails, jams, and juices. "
+(string)
+
+
+Water
+"1 to 2 times a week"
+(string)
+
+
+id
+"10"
