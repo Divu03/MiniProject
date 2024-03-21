@@ -1,6 +1,7 @@
 package com.littlelemon.fruithub
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,20 +20,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.littlelemon.fruithub.dao.AppDatabase
 import com.littlelemon.fruithub.dao.FruitDataNetwork
-import com.littlelemon.fruithub.dao.FruitNetwork
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 
 
 
@@ -43,6 +41,9 @@ class MainActivity : ComponentActivity() {
             json(contentType = ContentType("text", "plain"))
         }
     }
+
+    val db = Firebase.firestore
+
 // database built
     private val database by lazy {
         Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
@@ -106,19 +107,25 @@ class MainActivity : ComponentActivity() {
         }
         lifecycleScope.launch(Dispatchers.IO) {
             if (database.fruitDataDao().isEmpty()) {
-                val fruitDataNetwork = fetchMenu()
-                saveFruitDataToDatabase(fruitDataNetwork)
+                try {
+                    db.collection("Fruit_Data").get()
+                        .addOnSuccessListener { result ->
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                for (document in result) {
+                                    val fruitDataNetwork = document.toObject(FruitDataNetwork::class.java)
+                                    saveFruitDataToDatabase(fruitDataNetwork)
+                                }
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("FireBase", "Error getting documents: ", exception)
+                        }
+                } catch (e: Exception) {
+                    // Handle exceptions
+                    Log.d("FireBase","Error in bringing the data")
+                    Log.d("ErrorFB",e.toString())
+                }
             }
-        }
-    }
-    private suspend fun fetchMenu(): FruitDataNetwork {
-        val url ="jsonData API"
-        return try {
-            val jsonString = httpClient.get(url).body<String>()
-            val fruitNetwork = Json.decodeFromString<FruitNetwork>(jsonString)
-            fruitNetwork.fruit
-        } catch (e: Exception) {
-            FruitDataNetwork(0," "," "," "," "," "," "," "," ", " "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ")
         }
     }
 

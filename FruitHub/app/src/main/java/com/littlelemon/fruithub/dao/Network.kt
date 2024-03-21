@@ -12,60 +12,61 @@ data class FruitNetwork(
 @Serializable
 data class FruitDataNetwork(
     @SerialName("id")
-    val id: Int,
+    val id: Int = 0,
     @SerialName("name")
-    val name:String,
+    val name: String = "",
 
     @SerialName("feature")
-    val feature:String,
+    val feature: String = "",
     @SerialName("uses")
-    val uses:String,
+    val uses: String = "",
     @SerialName("pests")
-    val pests:String,
+    val pests: String = "",
     @SerialName("funFact")
-    val funFact:String,
+    val funFact: String = "",
     @SerialName("description")
-    val description:String,
+    val description: String = "",
 
     @SerialName("temperature")
-    val temperature:String,
+    val temperature: String = "",
     @SerialName("sunLight")
-    val sunLight: String,
+    val sunLight: String = "",
     @SerialName("hardinessZone")
-    val hardinessZone:String,
+    val hardinessZone: String = "",
     @SerialName("soil")
-    val soil:String,
+    val soil: String = "",
     @SerialName("growth")
-    val growth:String,
+    val growth: String = "",
     @SerialName("cautions")
-    val cautions: String,
+    val cautions: String = "",
 
     @SerialName("water")
-    val water:String,
+    val water: String = "",
     @SerialName("fertilizer")
-    val fertilizer:String,
+    val fertilizer: String = "",
     @SerialName("pruning")
-    val pruning:String,
+    val pruning: String = "",
     @SerialName("propagation")
-    val propagation:String,
+    val propagation: String = "",
     @SerialName("repotting")
-    val repotting:String,
+    val repotting: String = "",
     @SerialName("humidity")
-    val humidity:String,
+    val humidity: String = "",
 
     @SerialName("calories")
-    val calories:String,
+    val calories: String = "",
     @SerialName("vitamins")
-    val vitamins:String,
+    val vitamins: String = "",
     @SerialName("sugar")
-    val sugar:String,
+    val sugar: String = "",
     @SerialName("protein")
-    val protein:String,
+    val protein: String = "",
     @SerialName("carbs")
-    val carbs:String,
+    val carbs: String = "",
     @SerialName("fat")
-    val fat:String,
+    val fat: String = ""
 ) {
+    constructor() : this(0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
     fun toFruitDataRoom() = FruitDataRoom(
         id,
         name,
