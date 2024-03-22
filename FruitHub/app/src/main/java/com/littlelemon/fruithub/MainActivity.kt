@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -55,8 +54,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            val databaseFruitData by database.fruitDataDao().getAll().observeAsState()
-            val fruitDataObj by remember {  mutableStateOf(databaseFruitData) }
+            val databaseFruitData by database.fruitDataDao().getAll().observeAsState(null)
 
 // navcontroller and navigation tree
             val navController = rememberNavController()
@@ -101,28 +99,28 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 composable("fInfo"){
-                    FruitInfoScreen(fruitDataObj,navController)
+                    FruitInfoScreen(databaseFruitData,navController)
                 }
             }
         }
         lifecycleScope.launch(Dispatchers.IO) {
             if (database.fruitDataDao().isEmpty()) {
                 try {
-                    db.collection("Fruit_Data").get()
+                    db.collection("Fruit_Data").document("001").get()
                         .addOnSuccessListener { result ->
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                for (document in result) {
-                                    val fruitDataNetwork = document.toObject(FruitDataNetwork::class.java)
-                                    saveFruitDataToDatabase(fruitDataNetwork)
-                                }
+                            val fruitDataNetwork = result.toObject(FruitDataNetwork::class.java)
+                            if (fruitDataNetwork != null) {
+                                saveFruitDataToDatabase(fruitDataNetwork)
                             }
+                            Log.d("FBData", result.data.toString())
+                            Log.d("NetworkData",fruitDataNetwork.toString())
                         }
                         .addOnFailureListener { exception ->
-                            Log.d("FireBase", "Error getting documents: ", exception)
+                            Log.d("FireBaseError", "Error getting documents: ", exception)
                         }
                 } catch (e: Exception) {
                     // Handle exceptions
-                    Log.d("FireBase","Error in bringing the data")
+                    Log.d("FireBaseErr","Error in bringing the data")
                     Log.d("ErrorFB",e.toString())
                 }
             }
@@ -130,8 +128,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun saveFruitDataToDatabase(fruitDataNetwork: FruitDataNetwork) {
-        val fruitDataRooms = fruitDataNetwork.toFruitDataRoom()
-        database.fruitDataDao().insertAll(fruitDataRooms)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val fruitDataRooms = fruitDataNetwork.toFruitDataRoom()
+            database.fruitDataDao().insertObj(fruitDataRooms)
+        }
     }
 }
 

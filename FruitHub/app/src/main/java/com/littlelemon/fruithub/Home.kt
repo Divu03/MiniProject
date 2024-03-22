@@ -739,7 +739,7 @@ fun InfoGrid(titleList: List<String>,valueList: List<String>){
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard(titleList[4],valueList[6])
+            InfoCard(titleList[4],valueList[4])
             InfoCard(titleList[5],valueList[5])
         }
     }

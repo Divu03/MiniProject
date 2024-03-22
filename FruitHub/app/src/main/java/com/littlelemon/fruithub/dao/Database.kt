@@ -52,7 +52,7 @@ interface FruitDataDao{
     fun getByName(name: String): LiveData<FruitDataRoom>
 
     @Insert
-    fun insertAll(fruitData: FruitDataRoom)
+    fun insertObj(fruitData: FruitDataRoom)
 
     @Query("SELECT (SELECT COUNT(*) FROM FruitDataRoom) == 0")
     fun isEmpty(): Boolean
