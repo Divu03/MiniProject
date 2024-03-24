@@ -176,7 +176,7 @@ data class NavigationItem(
 
 val item = listOf(
     NavigationItem(
-        title = "MainActivity",
+        title = "Home",
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         hasNews = false,
@@ -194,7 +194,7 @@ val item = listOf(
         selectedIcon = Icons.Filled.Create,
         unselectedIcon = Icons.Outlined.Create,
         hasNews = false,
-        route = CameraScreen.route
+        route = CameraScreenDestination.route
     ),
     NavigationItem(
         title = "MySaves",
@@ -222,7 +222,7 @@ fun BottomNavigation(activityIndex: Int, navController: NavController){
     selectedItemIndex = when (currentRoute) {
         MainActivityScreen.route -> 0
         ExploreScreen.route -> 1
-        CameraScreen.route -> 2
+        CameraScreenDestination.route -> 2
         MySaveScreen.route -> 3
         UserScreen.route -> 4
         else -> selectedItemIndex
@@ -255,6 +255,11 @@ fun BottomNavigation(activityIndex: Int, navController: NavController){
                         .size(50.dp)
                         .align(Alignment.CenterVertically)
                         .fillMaxHeight()
+                        .clickable(
+                            onClick = {
+                                navController.navigate(CameraScreenDestination.route)
+                            }
+                        )
                 )
             }
         }

@@ -1,14 +1,24 @@
 package com.littlelemon.fruithub
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.camera.core.ImageCapture.OnImageCapturedCallback
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
+import androidx.camera.view.CameraController
+import androidx.camera.view.LifecycleCameraController
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,7 +51,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
 
 // database built
     private val database by lazy {
@@ -52,7 +62,27 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Ask for Permission
+        if(!hasRequiredPermissions()){
+            ActivityCompat.requestPermissions(
+                this, CAMERAX_PERMISSION,0
+            )
+        }
+
         setContent {
+
+            //photo viewModel
+            val viewModel = viewModel<ImageViewModel>()
+
+            // controller For Camara screen in LifeCycle
+            val cameraController = remember {
+                LifecycleCameraController(applicationContext).apply {
+                    setEnabledUseCases(
+                        CameraController.IMAGE_CAPTURE
+                    )
+                }
+            }
 
             val databaseFruitData by database.fruitDataDao().getAll().observeAsState(null)
 
@@ -76,10 +106,10 @@ class MainActivity : ComponentActivity() {
                 }
                 navigation(
                     "Camera",
-                    CameraScreen.route
+                    CameraScreenDestination.route
                 ){
                     composable("Camera"){
-                        CameraScreen()
+                        CameraScreen(cameraController)
                     }
                 }
                 navigation(
@@ -88,6 +118,7 @@ class MainActivity : ComponentActivity() {
                 ){
                     composable("MySave"){
                         MySaveScreen(fruitHubViewModel, navController)
+
                     }
                 }
                 navigation(
@@ -119,8 +150,6 @@ class MainActivity : ComponentActivity() {
                             Log.d("FireBaseError", "Error getting documents: ", exception)
                         }
                 } catch (e: Exception) {
-                    // Handle exceptions
-                    Log.d("FireBaseErr","Error in bringing the data")
                     Log.d("ErrorFB",e.toString())
                 }
             }
@@ -132,6 +161,44 @@ class MainActivity : ComponentActivity() {
             val fruitDataRooms = fruitDataNetwork.toFruitDataRoom()
             database.fruitDataDao().insertObj(fruitDataRooms)
         }
+    }
+
+    //Check if we have Permission
+    private fun hasRequiredPermissions(): Boolean{
+        return CAMERAX_PERMISSION.all{
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    //takePhoto Helper Function
+
+    fun takePhoto(
+        controller: LifecycleCameraController,
+        onPhotoTaken: (Bitmap) -> Unit
+    ){
+        controller.takePicture(
+            ContextCompat.getMainExecutor(applicationContext),
+            object : OnImageCapturedCallback() {
+                override fun onCaptureSuccess(image: ImageProxy) {
+                    super.onCaptureSuccess(image)
+                    onPhotoTaken(image.toBitmap())
+                }
+                override fun onError(exception: ImageCaptureException){
+                    super.onError(exception)
+                    Log.e("Camera","Couldn't take photo ",exception)
+                }
+            }
+        )
+    }
+
+    //Permission Record
+    companion object{
+        private val CAMERAX_PERMISSION = arrayOf(
+            Manifest.permission.CAMERA
+        )
     }
 }
 

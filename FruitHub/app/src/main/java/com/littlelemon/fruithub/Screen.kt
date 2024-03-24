@@ -1,5 +1,6 @@
 package com.littlelemon.fruithub
 
+import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -107,7 +108,11 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
 }
 
 @Composable
-fun CameraScreen(){}
+fun CameraScreen(
+    cameraController:LifecycleCameraController
+){
+    CameraView(cameraController)
+}
 
 @Composable
 fun UserScreen(navController: NavController){
@@ -131,7 +136,6 @@ fun UserScreen(navController: NavController){
             OptionAccount()
             OptionAccount()
             LogOut()
-
         }
     }
 }
@@ -184,6 +188,5 @@ fun FruitInfoScreen(fDO: FruitDataRoom?, navController: NavHostController){
                 }
             }
         }
-
     }
 }

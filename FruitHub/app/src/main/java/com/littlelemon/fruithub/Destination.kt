@@ -14,7 +14,7 @@ object ExploreScreen:Destination{
 object MySaveScreen:Destination{
     override val route = "MySaveScreen"
 }
-object CameraScreen:Destination{
+object CameraScreenDestination:Destination{
     override val route = "CameraScreen"
 }
 object UserScreen:Destination{
