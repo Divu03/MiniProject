@@ -1,6 +1,7 @@
 package com.littlelemon.fruithub
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -8,7 +9,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.camera.core.ImageCapture.OnImageCapturedCallback
+import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
@@ -109,7 +110,7 @@ class MainActivity : ComponentActivity() {
                     CameraScreenDestination.route
                 ){
                     composable("Camera"){
-                        CameraScreen(cameraController)
+                        CameraScreen(cameraController,applicationContext)
                     }
                 }
                 navigation(
@@ -173,27 +174,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    //takePhoto Helper Function
-
-    fun takePhoto(
-        controller: LifecycleCameraController,
-        onPhotoTaken: (Bitmap) -> Unit
-    ){
-        controller.takePicture(
-            ContextCompat.getMainExecutor(applicationContext),
-            object : OnImageCapturedCallback() {
-                override fun onCaptureSuccess(image: ImageProxy) {
-                    super.onCaptureSuccess(image)
-                    onPhotoTaken(image.toBitmap())
-                }
-                override fun onError(exception: ImageCaptureException){
-                    super.onError(exception)
-                    Log.e("Camera","Couldn't take photo ",exception)
-                }
-            }
-        )
-    }
-
     //Permission Record
     companion object{
         private val CAMERAX_PERMISSION = arrayOf(
@@ -210,4 +190,26 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navControll
         navController.getBackStackEntry(navGraphRoute)
     }
     return viewModel(parentEntry)
+}
+
+//takePhoto Helper Function
+
+fun takePhoto(
+    controller: LifecycleCameraController,
+    onPhotoTaken: (Bitmap) -> Unit,
+    context: Context
+){
+    controller.takePicture(
+        ContextCompat.getMainExecutor(context),
+        object : ImageCapture.OnImageCapturedCallback() {
+            override fun onCaptureSuccess(image: ImageProxy) {
+                super.onCaptureSuccess(image)
+                onPhotoTaken(image.toBitmap())
+            }
+            override fun onError(exception: ImageCaptureException){
+                super.onError(exception)
+                Log.e("Camera","Couldn't take photo ",exception)
+            }
+        }
+    )
 }

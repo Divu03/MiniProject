@@ -1,5 +1,6 @@
 package com.littlelemon.fruithub
 
+import android.content.Context
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -109,9 +110,10 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
 
 @Composable
 fun CameraScreen(
-    cameraController:LifecycleCameraController
+    cameraController:LifecycleCameraController,
+    context: Context
 ){
-    CameraView(cameraController)
+    CameraView(cameraController,context)
 }
 
 @Composable

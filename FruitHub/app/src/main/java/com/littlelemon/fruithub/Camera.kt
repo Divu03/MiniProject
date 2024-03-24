@@ -1,5 +1,6 @@
 package com.littlelemon.fruithub
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
@@ -25,6 +26,7 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,13 +34,16 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraView(
-    controller: LifecycleCameraController
+    controller: LifecycleCameraController,
+    context : Context
 ){
 
+    val scope = rememberCoroutineScope()
     val viewModel = viewModel<ImageViewModel>()
     val bitmaps by viewModel.bitmap.collectAsState()
 
@@ -51,29 +56,6 @@ fun CameraView(
                 bitmaps = bitmaps,
                 modifier = Modifier.fillMaxWidth()
             )
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceAround
-            ){
-                IconButton(onClick = {
-
-                }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Face,
-                        "Open Gallery"
-                    )
-                }
-                IconButton(onClick = {
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_camera_alt_24),
-                        "Open Gallery"
-                    )
-                }
-            }
         }
     ) {padding ->
         Box(
@@ -85,6 +67,32 @@ fun CameraView(
                 cameraController = controller,
                 modifier = Modifier.fillMaxSize()
             )
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                horizontalArrangement = Arrangement.SpaceAround
+            ){
+                IconButton(onClick = {
+                    scope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                    }
+                }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Face,
+                        "Open Gallery"
+                    )
+                }
+
+                IconButton(onClick = {
+                    takePhoto(controller,viewModel::onTakePhoto,context)
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_camera_alt_24),
+                        "Open Gallery"
+                    )
+                }
+            }
         }
         
     }
