@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -208,7 +209,7 @@ fun takePhoto(
 
                 val matrix = Matrix().apply {
                     postRotate(image.imageInfo.rotationDegrees.toFloat())
-                    postScale(-1f,1f)
+                    postScale(1f,1f)
                 }
 
                 val rotatedBitmap = Bitmap.createBitmap(
@@ -220,6 +221,8 @@ fun takePhoto(
                     matrix,
                     true
                 )
+
+                Toast.makeText(context,"Captured",Toast.LENGTH_SHORT).show()
 
                 onPhotoTaken(rotatedBitmap)
             }
