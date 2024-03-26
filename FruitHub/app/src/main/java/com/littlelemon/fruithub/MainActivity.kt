@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
 
             val databaseFruitData by database.fruitDataDao().getAll().observeAsState(null)
 
-// navcontroller and navigation tree
+            // navcontroller and navigation tree
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = MainActivityScreen.route) {
                 navigation("Home",

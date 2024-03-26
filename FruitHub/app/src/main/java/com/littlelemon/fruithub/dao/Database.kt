@@ -54,6 +54,9 @@ interface FruitDataDao{
     @Insert
     fun insertObj(fruitData: FruitDataRoom)
 
+    @Insert
+    fun insertAll(vararg fruitData: FruitDataRoom)
+
     @Query("SELECT (SELECT COUNT(*) FROM FruitDataRoom) == 0")
     fun isEmpty(): Boolean
 
