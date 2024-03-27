@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ligerinc.fruithub.dao.FruitDataRoom
+import com.ligerinc.fruithub.domain.Classification
 
 @Composable
 fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController){
@@ -111,9 +112,10 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
 @Composable
 fun CameraScreen(
     cameraController:LifecycleCameraController,
-    context: Context
+    context: Context,
+    classification: List<Classification>
 ){
-    CameraView(cameraController,context)
+    CameraView(cameraController,classification)
 }
 
 @Composable
@@ -149,15 +151,15 @@ fun FruitInfoScreen(fDO: FruitDataRoom?, navController: NavHostController){
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.strawberry_info),
-            contentDescription = null,
-            Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .height(240.dp)
-        )
         if (fDO != null) {
+            Image(
+                painter = painterResource(id = R.drawable.strawberry_info),
+                contentDescription = null,
+                Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .height(240.dp)
+            )
             InfoText(R.drawable.icon_description,"Description",fDO.description)
             val nutritionDataTitle = listOf("Calories","Vitamins","Sugar","Protein","Carb","Fat")
             val nutritionData = listOf(fDO.calories,fDO.vitamins,fDO.sugar,fDO.protein,fDO.carbs,fDO.fat)

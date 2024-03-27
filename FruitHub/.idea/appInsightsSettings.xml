@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.ligerinc.fruithub" />
+                  <option name="mobileSdkAppId" value="1:820227939272:android:a78ba78a07d3b33b4cbefd" />
+                  <option name="projectId" value="fruithub-33482" />
+                  <option name="projectNumber" value="820227939272" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

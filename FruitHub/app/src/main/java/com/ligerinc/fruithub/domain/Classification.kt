@@ -1,3 +1,5 @@
 package com.ligerinc.fruithub.domain
 
-//data class Classification()
+data class Classification(
+    val name: String
+)
