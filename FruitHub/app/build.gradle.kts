@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.littlelemon.fruithub"
+    namespace = "com.ligerinc.fruithub"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.littlelemon.fruithub"
+        applicationId = "com.ligerinc.fruithub"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

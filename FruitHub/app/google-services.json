@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:820227939272:android:446be8c47a6e5ef14cbefd",
+        "mobilesdk_app_id": "1:820227939272:android:a78ba78a07d3b33b4cbefd",
         "android_client_info": {
-          "package_name": "com.littlelemon.fruithub"
+          "package_name": "com.ligerinc.fruithub"
         }
       },
       "oauth_client": [],
