@@ -110,7 +110,7 @@ fun OptionAccount(oName:String ="Option name", imageIDN: Int =R.drawable.icon_ap
         Image(
             painterResource(id = imageIDN),
             contentDescription = null,
-            Modifier.size(50.dp)
+            Modifier.size(50.dp).padding(10.dp,0.dp)
         )
         Text(
             text = oName,

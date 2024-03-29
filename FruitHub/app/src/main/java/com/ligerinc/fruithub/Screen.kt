@@ -133,12 +133,11 @@ fun UserScreen(navController: NavController){
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp))
-            OptionAccount("Logout")
-            OptionAccount()
-            OptionAccount()
-            OptionAccount()
-            OptionAccount()
-            OptionAccount()
+            OptionAccount("App Appearance",R.drawable.icon_appearence)
+            OptionAccount("Account & Security",R.drawable.icon_acc_sec)
+            OptionAccount("Notification",R.drawable.icon_notification)
+            OptionAccount("History",R.drawable.icon_history_user)
+            OptionAccount("Help & Support",R.drawable.icon_help)
             LogOut()
         }
     }

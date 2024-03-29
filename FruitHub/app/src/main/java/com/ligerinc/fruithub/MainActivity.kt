@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val databaseFruitData by database.fruitDataDao().getAll().observeAsState(null)
+            val databaseFruitData by database.fruitDataDao().getAllFDR().observeAsState(null)
 
             // navcontroller and navigation tree
             val navController = rememberNavController()
@@ -161,7 +161,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         lifecycleScope.launch(Dispatchers.IO) {
-            if (database.fruitDataDao().isEmpty()) {
+            if (database.fruitDataDao().isEmptyFDR()) {
                 try {
                     db.collection("Fruit_info").document("1").get()
                         .addOnSuccessListener { result ->
@@ -185,7 +185,7 @@ class MainActivity : ComponentActivity() {
     private fun saveFruitDataToDatabase(fruitDataNetwork: FruitDataNetwork) {
         lifecycleScope.launch(Dispatchers.IO) {
             val fruitDataRooms = fruitDataNetwork.toFruitDataRoom()
-            database.fruitDataDao().insertObj(fruitDataRooms)
+            database.fruitDataDao().insertObjFDR(fruitDataRooms)
         }
     }
 

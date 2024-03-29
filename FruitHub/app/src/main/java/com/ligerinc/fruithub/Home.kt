@@ -395,8 +395,8 @@ fun ExploreFruit(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
             FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
+            FruitCard(navController,"Banana",R.drawable.banana)
+            FruitCard(navController,"Apple",R.drawable.apple)
             FruitCard(navController)
             FruitCard(navController)
             FruitCard(navController)
@@ -452,8 +452,8 @@ fun RecentFruit(navController: NavController){
             Modifier.horizontalScroll(rememberScrollState())
         ) {
             FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
+            FruitCard(navController,"Banana",R.drawable.banana)
+            FruitCard(navController,"Apple",R.drawable.apple)
             FruitCard(navController)
             FruitCard(navController)
             FruitCard(navController)

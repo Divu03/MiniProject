@@ -46,24 +46,44 @@ data class FruitDataRoom(
 interface FruitDataDao{
 
     @Query("SELECT * FROM FruitDataRoom")
-    fun getAll():LiveData<FruitDataRoom>
+    fun getAllFDR():LiveData<FruitDataRoom>
 
     @Query("SELECT * FROM FruitDataRoom WHERE name = :name")
-    fun getByName(name: String): LiveData<FruitDataRoom>
+    fun getByNameFDR(name: String): LiveData<FruitDataRoom>
 
     @Insert
-    fun insertObj(fruitData: FruitDataRoom)
+    fun insertObjFDR(fruitData: FruitDataRoom)
 
     @Insert
-    fun insertAll(vararg fruitData: FruitDataRoom)
+    fun insertAllFDR(vararg fruitData: FruitDataRoom)
 
     @Query("SELECT (SELECT COUNT(*) FROM FruitDataRoom) == 0")
-    fun isEmpty(): Boolean
+    fun isEmptyFDR(): Boolean
 
+    @Query("SELECT * FROM FruitList")
+    fun getAllFL():LiveData<FruitList>
+
+    @Query("SELECT * FROM FruitList WHERE name = :name")
+    fun getByNameFL(name: String): LiveData<FruitList>
+
+    @Insert
+    fun insertObjFL(fruitList: FruitList)
+
+    @Insert
+    fun insertAllFL(vararg fruitList: FruitList)
+
+    @Query("SELECT (SELECT COUNT(*) FROM FruitList) == 0")
+    fun isEmptyFL(): Boolean
 
 }
 
-@Database(entities = [FruitDataRoom::class], version = 1, exportSchema = false)
+@Database(entities = [FruitDataRoom::class,FruitList::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun fruitDataDao(): FruitDataDao
 }
+
+@Entity
+data class FruitList(
+    @PrimaryKey val id: Int,
+    val name: String
+)
