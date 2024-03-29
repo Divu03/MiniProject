@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
 fun ArticlesExplore(
@@ -137,7 +138,13 @@ fun TopExplore(fruitHubViewModel: FruitHubViewModel){
 }
 
 
-val fruitlist : List<String> = listOf("Watermelon","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple")
+val fruitlist : List<FruitList> = listOf(
+    FruitList(1,"Apple",R.drawable.apple),
+    FruitList(1,"Banana",R.drawable.banana),
+    FruitList(1,"Watermelon",R.drawable.watermelon),
+    FruitList(1,"Cherry",R.drawable.cherry),
+    FruitList(1,"Carambula",R.drawable.carambula)
+)
 
 @Composable
 fun FruitsExplore(navController: NavController) {
@@ -148,7 +155,7 @@ fun FruitsExplore(navController: NavController) {
         contentPadding = PaddingValues(10.dp)
         ){
         items(fruitlist) { item->
-            FruitCard(navController= navController,item)
+            FruitCard(navController= navController,item.name,item.imageId)
         }
     }
 }

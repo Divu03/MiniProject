@@ -1,5 +1,6 @@
 package com.ligerinc.fruithub.dao
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Database
@@ -14,10 +15,10 @@ data class FruitDataRoom(
     @PrimaryKey val id: Int,
     val name:String,
 
-    val features:String,
+    val feature:String,
     val uses:String,
     val pests:String,
-    val funFacts:String,
+    val funFact:String,
     val description:String,
 
     val temperature:String,
@@ -28,7 +29,7 @@ data class FruitDataRoom(
     val cautions: String,
 
     val water:String,
-    val fertilizer:String,
+    val fertilizers:String,
     val pruning:String,
     val propagation:String,
     val repotting:String,
@@ -70,7 +71,7 @@ interface FruitDataDao{
     fun insertObjFL(fruitList: FruitList)
 
     @Insert
-    fun insertAllFL(vararg fruitList: FruitList)
+    fun insertAllFL(vararg fruitList: List<FruitList>)
 
     @Query("SELECT (SELECT COUNT(*) FROM FruitList) == 0")
     fun isEmptyFL(): Boolean
@@ -85,5 +86,6 @@ abstract class AppDatabase : RoomDatabase() {
 @Entity
 data class FruitList(
     @PrimaryKey val id: Int,
-    val name: String
+    val name: String,
+    @DrawableRes val imageId : Int
 )

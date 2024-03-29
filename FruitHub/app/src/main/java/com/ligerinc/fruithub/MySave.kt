@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.ligerinc.fruithub.dao.FruitList
 
 
 @Composable
@@ -62,7 +63,13 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel){
         )
     }
 }
-val savedfruits : List<String> = listOf("Watermelon","Apple","Apple","Apple","Apple","Banana","Apple","Apple","Apple","Apple","Apple","Apple","Apple","Apple")
+val savedfruits : List<FruitList> = listOf(
+    FruitList(1,"Watermelon",R.drawable.watermelon),
+    FruitList(1,"Apple",R.drawable.apple),
+    FruitList(1,"Banana",R.drawable.banana),
+    FruitList(1,"Cherry",R.drawable.cherry),
+    FruitList(1,"Carambula",R.drawable.carambula)
+)
 
 @Composable
 fun FruitsSaved(navController:NavController) {
@@ -73,7 +80,7 @@ fun FruitsSaved(navController:NavController) {
         contentPadding = PaddingValues(10.dp)
     ){
         items(savedfruits) { item->
-            FruitCard(navController,item)
+            FruitCard(navController,item.name,item.imageId)
         }
     }
 }

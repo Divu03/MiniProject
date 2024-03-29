@@ -49,7 +49,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             if(fruitHubViewModel.switchStateExplore){
-                ArticlesExplore()
+                ArticlesExplore("How watermelons are healthy for you in summer season")
             }else{
                 FruitsExplore(navController)
             }
@@ -103,7 +103,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 FruitsSaved(navController)
             }
             else{
-                ArticlesExplore()
+                ArticlesExplore("Why You Should Never Store Watermelon In A Fridge")
             }
         }
     }

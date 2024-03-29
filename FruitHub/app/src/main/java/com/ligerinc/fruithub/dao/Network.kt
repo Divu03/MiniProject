@@ -16,14 +16,14 @@ data class FruitDataNetwork(
     @SerialName("name")
     val name: String = "",
 
-    @SerialName("features")
-    val features: String = "",
+    @SerialName("feature")
+    val feature: String = "",
     @SerialName("uses")
     val uses: String = "",
     @SerialName("pests")
     val pests: String = "",
-    @SerialName("funFacts")
-    val funFacts: String = "",
+    @SerialName("funFact")
+    val funFact: String = "",
     @SerialName("description")
     val description: String = "",
 
@@ -42,8 +42,8 @@ data class FruitDataNetwork(
 
     @SerialName("water")
     val water: String = "",
-    @SerialName("fertilizer")
-    val fertilizer: String = "",
+    @SerialName("fertilizers")
+    val fertilizers: String = "",
     @SerialName("pruning")
     val pruning: String = "",
     @SerialName("propagation")
@@ -70,10 +70,10 @@ data class FruitDataNetwork(
     fun toFruitDataRoom() = FruitDataRoom(
         id,
         name,
-        features,
+        feature,
         uses,
         pests,
-        funFacts,
+        funFact,
         description,
         temperature,
         sunLight,
@@ -82,7 +82,7 @@ data class FruitDataNetwork(
         growth,
         cautions,
         water,
-        fertilizer,
+        fertilizers,
         pruning,
         propagation,
         repotting,
