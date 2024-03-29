@@ -167,12 +167,12 @@ fun FruitInfoScreen(fDO: FruitDataRoom?, navController: NavHostController){
             val conditionData = listOf(fDO.temperature,fDO.sunLight,fDO.hardinessZone,fDO.soil,fDO.growth,fDO.cautions)
             InfoGrid(conditionDataTitle,conditionData)
             val careDataTitle = listOf("Water","Fertilizer","Pruning","Propagation","Repotting","Humidity")
-            val careData = listOf(fDO.water,fDO.fertilizer,fDO.pruning,fDO.propagation,fDO.repotting,fDO.humidity)
+            val careData = listOf(fDO.water,fDO.fertilizers,fDO.pruning,fDO.propagation,fDO.repotting,fDO.humidity)
             InfoGrid(careDataTitle,careData)
             InfoText(R.drawable.icon_description,"Common Pests & Diseases",fDO.pests)
-            InfoText(R.drawable.icon_description,"Special Features",fDO.features)
+            InfoText(R.drawable.icon_description,"Special Features",fDO.feature)
             InfoText(R.drawable.icon_description,"Uses",fDO.uses)
-            InfoText(R.drawable.icon_description,"Fun Facts",fDO.funFacts)
+            InfoText(R.drawable.icon_description,"Fun Facts",fDO.funFact)
         }
         else{
             Column(
