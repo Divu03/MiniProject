@@ -22,11 +22,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
 import com.ligerinc.fruithub.domain.Classification
 
 @Composable
-fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController){
+fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
     Scaffold(
         topBar = {
             Column(
@@ -34,7 +35,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
                 modifier = Modifier.padding(5.dp)
             ){
                 TopExplore(fruitHubViewModel)
-                SearchBar()
+                SearchBar(fruitDataDao)
             }
         },
         bottomBar = {
@@ -79,7 +80,7 @@ fun MainActivityScreen(navController: NavController) {
 }
 
 @Composable
-fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController){
+fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
     Scaffold(
         topBar = {
             Column(
@@ -87,7 +88,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 modifier = Modifier.padding(5.dp)
             ){
                 TopSaves(fruitHubViewModel)
-                SearchBar()
+                SearchBar(fruitDataDao)
             }
         }, bottomBar = {
             BottomNavigation(activityIndex = 3,navController)

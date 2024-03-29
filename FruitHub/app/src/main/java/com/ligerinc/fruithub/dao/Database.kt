@@ -71,8 +71,9 @@ interface FruitDataDao{
     fun insertObjFL(fruitList: FruitList)
 
     @Insert
-    fun insertAllFL(vararg fruitList: List<FruitList>)
-
+    fun insertAllFL(vararg fruitList: FruitList)
+    @Query("SELECT * FROM FruitList WHERE name LIKE '%' || :name || '%'")
+    fun searchByNameFL(name: String): LiveData<List<FruitList>>
     @Query("SELECT (SELECT COUNT(*) FROM FruitList) == 0")
     fun isEmptyFL(): Boolean
 

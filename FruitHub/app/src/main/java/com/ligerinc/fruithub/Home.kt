@@ -38,6 +38,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,8 +61,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ligerinc.fruithub.dao.FruitDataDao
+import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
 fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermelon_article){
@@ -518,18 +524,48 @@ fun RecentArticles(){
 }
 
 @Composable
-fun SearchBar(){
+fun SearchBar(fruitDataDao: FruitDataDao) {
     var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
-    OutlinedTextField(
-        value = searchPhrase,
-        onValueChange = { searchPhrase = it },
-        label = { Text("Search") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 30.dp, vertical = 5.dp),
-        shape = RoundedCornerShape(20.dp)
-    )
+    var suggestions by remember { mutableStateOf<List<FruitList>>(emptyList()) }
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(searchPhrase.text) {
+        if (searchPhrase.text.isNotBlank()) {
+            val observer = Observer<List<FruitList>> { fruits ->
+                suggestions = fruits
+            }
+            fruitDataDao.searchByNameFL(searchPhrase.text).observe(lifecycleOwner, observer)
+        } else {
+            suggestions = emptyList()
+        }
+    }
+
+    Column {
+        OutlinedTextField(
+            value = searchPhrase,
+            onValueChange = { searchPhrase = it },
+            label = { Text("Search") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp, vertical = 5.dp),
+            shape = RoundedCornerShape(20.dp)
+        )
+        suggestions.forEach { fruit ->
+            Text(
+                text = fruit.name,
+                modifier = Modifier
+                    .clickable {
+                        // Handle suggestion click here
+                    }
+                    .padding(8.dp)
+            )
+        }
+    }
 }
+
+
+
 
 @Composable
 fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R.drawable.icon_app){

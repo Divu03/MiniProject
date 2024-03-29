@@ -78,9 +78,111 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        if(database.fruitDataDao().isEmptyFL()){
-            database.fruitDataDao().insertAllFL(
-                listOf(
+
+        setContent {
+
+            //photo viewModel
+            val viewModel = viewModel<ImageViewModel>()
+
+            var classifications by remember {
+                mutableStateOf(emptyList<Classification>())
+            }
+
+            val analyzer = remember {
+                FruitImageAnalyzer(
+                    classifier = TfLiteFruitClassifier(
+                        context = applicationContext
+                    ),
+                    onResult ={
+                        classifications = it
+                    }
+                )
+            }
+
+            // controller For Camara screen in LifeCycle
+            val cameraController = remember {
+                LifecycleCameraController(applicationContext).apply {
+                    setEnabledUseCases(
+                        CameraController.IMAGE_ANALYSIS
+                    )
+                    setImageAnalysisAnalyzer(
+                        ContextCompat.getMainExecutor(applicationContext),
+                        analyzer
+                    )
+                }
+            }
+
+            val databaseFruitData by database.fruitDataDao().getAllFDR().observeAsState(null)
+
+            // navcontroller and navigation tree
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = MainActivityScreen.route) {
+                navigation("Home",
+                MainActivityScreen.route
+                ){
+                    composable("Home") {
+                        MainActivityScreen(navController)
+                    }
+                }
+                navigation(
+                    "Explore",
+                    ExploreScreen.route
+                ){
+                    composable("Explore"){
+                        ExploreScreen(fruitHubViewModel,navController,database.fruitDataDao())
+                    }
+                }
+                navigation(
+                    "Camera",
+                    CameraScreenDestination.route
+                ){
+                    composable("Camera"){
+                        CameraScreen(cameraController,applicationContext,classifications)
+                    }
+                }
+                navigation(
+                    "MySave",
+                    MySaveScreen.route
+                ){
+                    composable("MySave"){
+                        MySaveScreen(fruitHubViewModel, navController,database.fruitDataDao())
+
+                    }
+                }
+                navigation(
+                    "User",
+                    UserScreen.route
+                ){
+                    composable("User"){
+                        UserScreen(navController)
+                    }
+                }
+                composable("fInfo"){
+                    FruitInfoScreen(databaseFruitData,navController)
+                }
+            }
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (database.fruitDataDao().isEmptyFDR()) {
+                try {
+                    db.collection("Fruit_info").document("1").get()
+                        .addOnSuccessListener { result ->
+                            val fruitDataNetwork = result.toObject(FruitDataNetwork::class.java)
+                            if (fruitDataNetwork != null) {
+                                saveFruitDataToDatabase(fruitDataNetwork)
+                            }
+                            Log.d("FBData", result.data.toString())
+                            Log.d("NetworkData",fruitDataNetwork.toString())
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("FireBaseError", "Error getting documents: ", exception)
+                        }
+                } catch (e: Exception) {
+                    Log.d("ErrorFB",e.toString())
+                }
+            }
+            if(database.fruitDataDao().isEmptyFL()){
+                database.fruitDataDao().insertAllFL(
                     FruitList(1,"Apple Braeburn", R.drawable.apple),
                     FruitList(2,"Apple Crimson Snow", R.drawable.apple_crimson_snow),
                     FruitList(3,"Apricot", R.drawable.apricot),
@@ -140,9 +242,9 @@ class MainActivity : ComponentActivity() {
                     FruitList(57,"Pear Abate", R.drawable.pear_abate),
                     FruitList(58,"Pear Forelle", R.drawable.pear_forelle),
                     FruitList(59,"Pear Kaiser", R.drawable.pear_kaiser),
-                    FruitList(60,"Pear Monster", R.drawable.pear),
+                    FruitList(60,"Pear Monster", R.drawable.pear_monster),
                     FruitList(61,"Pear Red", R.drawable.pear_red),
-                    FruitList(62,"Pear Stone", R.drawable.pear),
+                    FruitList(62,"Pear Stone", R.drawable.pear_stone),
                     FruitList(63,"Pear Williams", R.drawable.pear_williams),
                     FruitList(64,"Pepino", R.drawable.pepino),
                     FruitList(65,"Pepper Green", R.drawable.pepper_green),
@@ -171,111 +273,7 @@ class MainActivity : ComponentActivity() {
                     FruitList(88,"Tomato", R.drawable.tomato),
                     FruitList(89,"Walnut", R.drawable.walnut),
                     FruitList(90,"Watermelon", R.drawable.watermelon)
-                    )
                 )
-        }
-
-        setContent {
-
-            //photo viewModel
-            val viewModel = viewModel<ImageViewModel>()
-
-            var classifications by remember {
-                mutableStateOf(emptyList<Classification>())
-            }
-
-            val analyzer = remember {
-                FruitImageAnalyzer(
-                    classifier = TfLiteFruitClassifier(
-                        context = applicationContext
-                    ),
-                    onResult ={
-                        classifications = it
-                    }
-                )
-            }
-
-            // controller For Camara screen in LifeCycle
-            val cameraController = remember {
-                LifecycleCameraController(applicationContext).apply {
-                    setEnabledUseCases(
-                        CameraController.IMAGE_ANALYSIS
-                    )
-                    setImageAnalysisAnalyzer(
-                        ContextCompat.getMainExecutor(applicationContext),
-                        analyzer
-                    )
-                }
-            }
-
-            val databaseFruitData by database.fruitDataDao().getAllFDR().observeAsState(null)
-
-            // navcontroller and navigation tree
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = MainActivityScreen.route) {
-                navigation("Home",
-                MainActivityScreen.route
-                ){
-                    composable("Home") {
-                        MainActivityScreen(navController)
-                    }
-                }
-                navigation(
-                    "Explore",
-                    ExploreScreen.route
-                ){
-                    composable("Explore"){
-                        ExploreScreen(fruitHubViewModel,navController)
-                    }
-                }
-                navigation(
-                    "Camera",
-                    CameraScreenDestination.route
-                ){
-                    composable("Camera"){
-                        CameraScreen(cameraController,applicationContext,classifications)
-                    }
-                }
-                navigation(
-                    "MySave",
-                    MySaveScreen.route
-                ){
-                    composable("MySave"){
-                        MySaveScreen(fruitHubViewModel, navController)
-
-                    }
-                }
-                navigation(
-                    "User",
-                    UserScreen.route
-                ){
-                    composable("User"){
-                        UserScreen(navController)
-                    }
-                }
-                composable("fInfo"){
-                    FruitInfoScreen(databaseFruitData,navController)
-                }
-            }
-        }
-        lifecycleScope.launch(Dispatchers.IO) {
-            if (database.fruitDataDao().isEmptyFDR()) {
-                try {
-                    db.collection("Fruit_info").document("1").get()
-                        .addOnSuccessListener { result ->
-                            val fruitDataNetwork = result.toObject(FruitDataNetwork::class.java)
-                            if (fruitDataNetwork != null) {
-                                saveFruitDataToDatabase(fruitDataNetwork)
-                            }
-                            Log.d("FBData", result.data.toString())
-                            Log.d("NetworkData",fruitDataNetwork.toString())
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.d("FireBaseError", "Error getting documents: ", exception)
-                        }
-                } catch (e: Exception) {
-                    Log.d("ErrorFB",e.toString())
-                }
             }
         }
     }
