@@ -35,7 +35,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
                 modifier = Modifier.padding(5.dp)
             ){
                 TopExplore(fruitHubViewModel)
-                SearchBar(fruitDataDao)
+                SearchBarExplore(fruitDataDao)
             }
         },
         bottomBar = {
@@ -88,7 +88,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 modifier = Modifier.padding(5.dp)
             ){
                 TopSaves(fruitHubViewModel)
-                SearchBar(fruitDataDao)
+                SearchBarSaves()
             }
         }, bottomBar = {
             BottomNavigation(activityIndex = 3,navController)

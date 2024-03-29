@@ -523,46 +523,7 @@ fun RecentArticles(){
 
 }
 
-@Composable
-fun SearchBar(fruitDataDao: FruitDataDao) {
-    var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
-    var suggestions by remember { mutableStateOf<List<FruitList>>(emptyList()) }
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(searchPhrase.text) {
-        if (searchPhrase.text.isNotBlank()) {
-            val observer = Observer<List<FruitList>> { fruits ->
-                suggestions = fruits
-            }
-            fruitDataDao.searchByNameFL(searchPhrase.text).observe(lifecycleOwner, observer)
-        } else {
-            suggestions = emptyList()
-        }
-    }
-
-    Column {
-        OutlinedTextField(
-            value = searchPhrase,
-            onValueChange = { searchPhrase = it },
-            label = { Text("Search") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp, vertical = 5.dp),
-            shape = RoundedCornerShape(20.dp)
-        )
-        suggestions.forEach { fruit ->
-            Text(
-                text = fruit.name,
-                modifier = Modifier
-                    .clickable {
-                        // Handle suggestion click here
-                    }
-                    .padding(8.dp)
-            )
-        }
-    }
-}
 
 
 
