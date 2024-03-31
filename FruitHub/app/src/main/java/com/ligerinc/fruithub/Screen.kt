@@ -15,9 +15,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -81,14 +86,15 @@ fun MainActivityScreen(navController: NavController) {
 
 @Composable
 fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
-    Scaffold(
+    var s by remember { mutableStateOf(TextFieldValue("")) }
+        Scaffold(
         topBar = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(5.dp)
             ){
                 TopSaves(fruitHubViewModel)
-                SearchBarSaves()
+                s = searchBarSaves()
             }
         }, bottomBar = {
             BottomNavigation(activityIndex = 3,navController)
@@ -101,7 +107,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (!fruitHubViewModel.switchStateSaves){
-                FruitsSaved(navController)
+                FruitsSaved(navController,s)
             }
             else{
                 ArticlesExplore("Why You Should Never Store Watermelon In A Fridge")

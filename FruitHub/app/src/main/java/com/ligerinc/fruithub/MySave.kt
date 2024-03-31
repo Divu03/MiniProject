@@ -1,7 +1,6 @@
 package com.ligerinc.fruithub
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -82,22 +81,7 @@ val savedfruits : List<FruitList> = listOf(
 )
 
 @Composable
-fun FruitsSaved(navController:NavController) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalItemSpacing = 10.dp,
-        contentPadding = PaddingValues(10.dp)
-    ){
-        items(savedfruits) { item->
-            FruitCard(navController,item.name,item.imageId)
-        }
-    }
-}
-
-@Composable
-fun SearchBarSaves() {
-    var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
+fun FruitsSaved(navController:NavController,searchPhrase:TextFieldValue) {
     var suggestions by remember { mutableStateOf<List<FruitList>>(emptyList()) }
 
     LaunchedEffect(searchPhrase.text) {
@@ -109,6 +93,28 @@ fun SearchBarSaves() {
             emptyList()
         }
     }
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalItemSpacing = 10.dp,
+        contentPadding = PaddingValues(10.dp)
+    ){
+        if(suggestions.isEmpty()){
+            items(savedfruits) { item->
+                FruitCard(navController,item.name,item.imageId)
+            }
+        }
+        else{
+            items(suggestions) { item->
+                FruitCard(navController,item.name,item.imageId)
+            }
+        }
+    }
+}
+
+@Composable
+fun searchBarSaves():TextFieldValue {
+    var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
 
     Column {
         OutlinedTextField(
@@ -120,17 +126,8 @@ fun SearchBarSaves() {
                 .padding(horizontal = 30.dp, vertical = 5.dp),
             shape = RoundedCornerShape(20.dp)
         )
-        suggestions.forEach { fruit ->
-            Text(
-                text = fruit.name,
-                modifier = Modifier
-                    .clickable {
-                        // Handle suggestion click here
-                    }
-                    .padding(8.dp)
-            )
-        }
     }
+    return searchPhrase
 }
 
 
