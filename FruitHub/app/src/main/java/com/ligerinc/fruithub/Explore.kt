@@ -141,7 +141,7 @@ fun SearchBarExplore(fruitDataDao: FruitDataDao) {
                 text = fruit.name,
                 modifier = Modifier
                     .clickable {
-                        // Handle suggestion click here
+                        // on click API call of FruitHub from FireBase
                     }
                     .padding(8.dp)
             )
