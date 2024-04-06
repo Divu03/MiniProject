@@ -150,7 +150,7 @@ fun SearchBarExplore(fruitDataDao: FruitDataDao) {
 }
 
 @Composable
-fun TopExplore(fruitHubViewModel: FruitHubViewModel){
+fun TopExplore(fruitHubViewModel: FruitHubViewModel,navController: NavController){
     Row (
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -160,7 +160,10 @@ fun TopExplore(fruitHubViewModel: FruitHubViewModel){
         Image(
             painter = painterResource(id = R.drawable.icon_back),
             contentDescription = null,
-            alignment = Alignment.CenterStart
+            alignment = Alignment.CenterStart,
+            modifier = Modifier.clickable {
+                navController.popBackStack()
+            }
         )
         Text(
             text = "Explore",
@@ -191,11 +194,11 @@ fun TopExplore(fruitHubViewModel: FruitHubViewModel){
 
 
 val fruitlist : List<FruitList> = listOf(
-    FruitList(1,"Apple",R.drawable.apple),
-    FruitList(1,"Banana",R.drawable.banana),
-    FruitList(1,"Watermelon",R.drawable.watermelon),
-    FruitList(1,"Cherry",R.drawable.cherry),
-    FruitList(1,"Carambula",R.drawable.carambula)
+    FruitList(1,"Apple Braeburn",R.drawable.apple),
+    FruitList(5,"Banana",R.drawable.banana),
+    FruitList(90,"Watermelon",R.drawable.watermelon),
+    FruitList(12,"Cherry",R.drawable.cherry),
+    FruitList(10,"Carambula",R.drawable.carambula)
 )
 
 @Composable
@@ -207,7 +210,7 @@ fun FruitsExplore(navController: NavController) {
         contentPadding = PaddingValues(10.dp)
         ){
         items(fruitlist) { item->
-            FruitCard(navController= navController,item.name,item.imageId)
+            FruitCard(navController= navController,item)
         }
     }
 }

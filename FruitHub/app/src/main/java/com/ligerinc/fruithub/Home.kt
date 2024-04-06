@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
 fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermelon_article){
@@ -117,8 +118,7 @@ fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermel
 @Composable
 fun FruitCard(
     navController: NavController,
-    fruitName: String = "Watermelon",
-    fruitImageId: Int = R.drawable.watermelon
+    fruitList: FruitList = FruitList(90,"Watermelon",R.drawable.watermelon)
 ){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -128,7 +128,7 @@ fun FruitCard(
             .size(width = 162.dp, height = 107.dp)
             .padding(10.dp),
         onClick = {
-            navController.navigate("fInfo/$fruitName")
+            navController.navigate("fInfo/${fruitList.id}/${fruitList.name}")
         }
     ) {
         Row(
@@ -136,7 +136,7 @@ fun FruitCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = fruitName,
+                text = fruitList.name,
                 fontFamily = FontFamily(
                     Font(resId = R.font.jaldi_bold,
                         FontWeight.Bold)
@@ -149,7 +149,7 @@ fun FruitCard(
                 overflow = TextOverflow.Visible
             )
             Image(
-                painter = painterResource(id = fruitImageId),
+                painter = painterResource(id = fruitList.imageId),
                 contentDescription = null,
                 Modifier
                     .size(Dp(81F), Dp(107F))
@@ -395,8 +395,8 @@ fun ExploreFruit(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
             FruitCard(navController)
-            FruitCard(navController,"Banana",R.drawable.banana)
-            FruitCard(navController,"Apple",R.drawable.apple)
+            FruitCard(navController)
+            FruitCard(navController)
             FruitCard(navController)
             FruitCard(navController)
             FruitCard(navController)
@@ -452,14 +452,13 @@ fun RecentFruit(navController: NavController){
             Modifier.horizontalScroll(rememberScrollState())
         ) {
             FruitCard(navController)
-            FruitCard(navController,"Banana",R.drawable.banana)
-            FruitCard(navController,"Apple",R.drawable.apple)
+            FruitCard(navController)
+            FruitCard(navController)
             FruitCard(navController)
             FruitCard(navController)
             FruitCard(navController)
         }
     }
-
 }
 
 

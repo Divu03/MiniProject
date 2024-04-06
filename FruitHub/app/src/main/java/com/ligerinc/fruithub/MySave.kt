@@ -1,6 +1,7 @@
 package com.ligerinc.fruithub
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,7 +37,7 @@ import com.ligerinc.fruithub.dao.FruitList
 
 
 @Composable
-fun TopSaves(fruitHubViewModel: FruitHubViewModel){
+fun TopSaves(fruitHubViewModel: FruitHubViewModel,navController: NavController){
     Row (
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -46,7 +47,10 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel){
         Image(
             painter = painterResource(id = R.drawable.icon_back),
             contentDescription = null,
-            alignment = Alignment.CenterStart
+            alignment = Alignment.CenterStart,
+            modifier = Modifier.clickable {
+                navController.popBackStack()
+            }
         )
         Text(
             text = "My Saves",
@@ -73,11 +77,11 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel){
     }
 }
 val savedfruits : List<FruitList> = listOf(
-    FruitList(1,"Watermelon",R.drawable.watermelon),
-    FruitList(1,"Apple",R.drawable.apple),
-    FruitList(1,"Banana",R.drawable.banana),
-    FruitList(1,"Cherry",R.drawable.cherry),
-    FruitList(1,"Carambula",R.drawable.carambula)
+    FruitList(90,"Watermelon",R.drawable.watermelon),
+    FruitList(1,"Apple Braeburn",R.drawable.apple),
+    FruitList(5,"Banana",R.drawable.banana),
+    FruitList(12,"Cherry",R.drawable.cherry),
+    FruitList(10,"Carambula",R.drawable.carambula)
 )
 
 @Composable
@@ -101,12 +105,12 @@ fun FruitsSaved(navController:NavController,searchPhrase:TextFieldValue) {
     ){
         if(suggestions.isEmpty()){
             items(savedfruits) { item->
-                FruitCard(navController,item.name,item.imageId)
+                FruitCard(navController,item)
             }
         }
         else{
             items(suggestions) { item->
-                FruitCard(navController,item.name,item.imageId)
+                FruitCard(navController,item)
             }
         }
     }

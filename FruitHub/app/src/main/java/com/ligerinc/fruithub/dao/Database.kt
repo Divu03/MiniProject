@@ -61,6 +61,9 @@ interface FruitDataDao{
     @Query("SELECT (SELECT COUNT(*) FROM FruitDataRoom) == 0")
     fun isEmptyFDR(): Boolean
 
+    @Query("SELECT * FROM FruitDataRoom WHERE id = :id")
+    fun getByIdFDR(id: String): LiveData<FruitDataRoom?>
+
     @Query("SELECT * FROM FruitList")
     fun getAllFL():LiveData<FruitList>
 

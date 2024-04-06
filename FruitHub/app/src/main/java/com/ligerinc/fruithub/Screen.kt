@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.ligerinc.fruithub.dao.AppDatabase
 import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
 import com.ligerinc.fruithub.domain.Classification
@@ -34,7 +36,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(5.dp)
             ){
-                TopExplore(fruitHubViewModel)
+                TopExplore(fruitHubViewModel,navController)
                 SearchBarExplore(fruitDataDao)
             }
         },
@@ -88,7 +90,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(5.dp)
             ){
-                TopSaves(fruitHubViewModel)
+                TopSaves(fruitHubViewModel,navController)
                 s = searchBarSaves()
             }
         }, bottomBar = {
@@ -146,9 +148,14 @@ fun UserScreen(navController: NavController){
 }
 
 @Composable
-fun FruitInfoScreen(fDO: FruitDataRoom?, navController: NavHostController,fruitName:String){
+fun FruitInfoScreen(navController: NavHostController, database: AppDatabase, fruitId: Int, fruitName: String) {
+
+    val fruitDataDao = database.fruitDataDao()
+
+    val fruitDataRoom: FruitDataRoom? by fruitDataDao.getByIdFDR(fruitId.toString()).observeAsState()
+
     Column {
-        TopInfo(fruitName,navController)
-        FruitInfo(fDO, navController)
+        TopInfo(fruitName, navController)
+        FruitInfo(fruitDataRoom, navController)
     }
 }
