@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase
 
 @Entity
 data class FruitDataRoom(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: String,
     val name:String,
 
     val feature:String,

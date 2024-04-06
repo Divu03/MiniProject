@@ -12,7 +12,7 @@ data class FruitNetwork(
 @Serializable
 data class FruitDataNetwork(
     @SerialName("id")
-    val id: Int = 0,
+    val id: String = "",
     @SerialName("name")
     val name: String = "",
 
@@ -66,7 +66,7 @@ data class FruitDataNetwork(
     @SerialName("fat")
     val fat: String = ""
 ) {
-    constructor() : this(0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
     fun toFruitDataRoom() = FruitDataRoom(
         id,
         name,
