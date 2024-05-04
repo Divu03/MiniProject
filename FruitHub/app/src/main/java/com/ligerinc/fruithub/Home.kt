@@ -1,10 +1,12 @@
 package com.ligerinc.fruithub
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -522,7 +525,7 @@ fun RecentArticles(){
 
 
 @Composable
-fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R.drawable.icon_app){
+fun InfoCard( cardTitle:String="title", cardValue:String="value", @DrawableRes iconId:Int = R.drawable.icon_app){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -537,7 +540,7 @@ fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R
             verticalAlignment = Alignment.CenterVertically
         ){
             Image(
-                painter = painterResource(id = R.drawable.icon_camara),
+                painter = painterResource(id = iconId),
                 contentDescription = null,
                 Modifier
                     .fillMaxWidth(.2f)
@@ -579,13 +582,22 @@ fun InfoCard( cardTitle:String="title", cardValue:String="value", iconId:Int = R
     }
 }
 
+@Preview
 @Composable
-fun InfoText(iconId: Int= R.drawable.icon_description,titleInfo:String="Title",valueInfo:String="upcoming"){
-    Column {
-        Row (
+fun InfoText(
+    iconId: Int = R.drawable.icon_description,
+    titleInfo: String = "Title",
+    valueInfo: String = "upcoming"
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp)
+    ) {
+        Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             Image(
                 painter = painterResource(id = iconId),
                 contentDescription = null,
@@ -603,29 +615,36 @@ fun InfoText(iconId: Int= R.drawable.icon_description,titleInfo:String="Title",v
                 ),
                 fontSize = 22.sp,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(15.dp, 0.dp),
             )
         }
         Spacer(modifier = Modifier.size(10.dp))
-        Text(
-            text = valueInfo,
-            fontFamily = FontFamily(
-                Font(
-                    resId = R.font.jaldi_regular,
-                    FontWeight.Normal
-                )
-            ),
-            fontSize = 16.sp,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp, 0.dp)
-                .height(90.dp),
-            color = Color(145, 121, 121),
-            overflow = TextOverflow.Ellipsis
-        )
+        ) {
+            Text(
+                text = valueInfo,
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.jaldi_regular,
+                        FontWeight.Normal
+                    )
+                ),
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .wrapContentSize()
+                    .align(Alignment.TopStart),
+                color = Color(145, 121, 121),
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
+
 
 @Preview
 @Composable
@@ -687,7 +706,7 @@ fun PhotoGallery(){
 }
 
 @Composable
-fun InfoGrid(titleList: List<String>,valueList: List<String>){
+fun InfoGrid(titleList: List<String>,valueList: List<String>,iconList: List<Int>,title: String = "Titile"){
     Column(
         Modifier.fillMaxWidth(),
     ) {
@@ -703,7 +722,7 @@ fun InfoGrid(titleList: List<String>,valueList: List<String>){
                     .padding(10.dp, 0.dp)
             )
             Text(
-                text = "titleInfo",
+                text = title,
                 fontFamily = FontFamily(
                     Font(
                         resId = R.font.jaldi_bold,
@@ -720,22 +739,22 @@ fun InfoGrid(titleList: List<String>,valueList: List<String>){
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard(titleList[0],valueList[0])
-            InfoCard(titleList[1],valueList[1])
+            InfoCard(titleList[0],valueList[0],iconList[0])
+            InfoCard(titleList[1],valueList[1],iconList[1])
         }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard(titleList[2],valueList[2])
-            InfoCard(titleList[3],valueList[3])
+            InfoCard(titleList[2],valueList[2],iconList[2])
+            InfoCard(titleList[3],valueList[3],iconList[3])
         }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfoCard(titleList[4],valueList[4])
-            InfoCard(titleList[5],valueList[5])
+            InfoCard(titleList[4],valueList[4],iconList[4])
+            InfoCard(titleList[5],valueList[5],iconList[5])
         }
     }
 }

@@ -45,13 +45,16 @@ fun FruitInfo(fDO: FruitDataRoom?, navController: NavHostController){
             InfoText(R.drawable.icon_description,"Description",fDO.description)
             val nutritionDataTitle = listOf("Calories","Vitamins","Sugar","Protein","Carb","Fat")
             val nutritionData = listOf(fDO.calories,fDO.vitamins,fDO.sugar,fDO.protein,fDO.carbs,fDO.fat)
-            InfoGrid(nutritionDataTitle,nutritionData)
+            val nutritionIcon = listOf(R.drawable.icon_temp,R.drawable.icon_sun,R.drawable.icon_hzone,R.drawable.icon_soil,R.drawable.icon_growthrate,R.drawable.icon_coution)
+            InfoGrid(nutritionDataTitle,nutritionData,nutritionIcon,"Nutrition")
             val conditionDataTitle = listOf("Temperature","Sunlight","Hardiness Zones","Soil","Growth Rate","Cautions/Toxicity")
             val conditionData = listOf(fDO.temperature,fDO.sunLight,fDO.hardinessZone,fDO.soil,fDO.growth,fDO.cautions)
-            InfoGrid(conditionDataTitle,conditionData)
+            val conditionIcon = listOf(R.drawable.icon_temp,R.drawable.icon_sun,R.drawable.icon_hzone,R.drawable.icon_soil,R.drawable.icon_growthrate,R.drawable.icon_coution)
+            InfoGrid(conditionDataTitle,conditionData,conditionIcon,"Conditions")
             val careDataTitle = listOf("Water","Fertilizer","Pruning","Propagation","Repotting","Humidity")
             val careData = listOf(fDO.water,fDO.fertilizers,fDO.pruning,fDO.propagation,fDO.repotting,fDO.humidity)
-            InfoGrid(careDataTitle,careData)
+            val careIcon = listOf(R.drawable.icon_waterd,R.drawable.icon_fertilizer,R.drawable.icon_pruning,R.drawable.icon_propogation,R.drawable.icon_soil,R.drawable.icon_humidity)
+            InfoGrid(careDataTitle,careData,careIcon,"How to Care")
             InfoText(R.drawable.icon_description,"Common Pests & Diseases",fDO.pests)
             InfoText(R.drawable.icon_description,"Special Features",fDO.feature)
             InfoText(R.drawable.icon_description,"Uses",fDO.uses)
@@ -105,3 +108,4 @@ fun TopInfo(fruitName:String,navController: NavController){
         )
     }
 }
+

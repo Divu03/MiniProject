@@ -5,6 +5,9 @@
       <entry key="InfoCard">
         <State />
       </entry>
+      <entry key="InfoText">
+        <State />
+      </entry>
       <entry key="LogOut">
         <State />
       </entry>
