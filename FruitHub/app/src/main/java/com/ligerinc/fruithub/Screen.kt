@@ -26,7 +26,6 @@ import androidx.navigation.NavHostController
 import com.ligerinc.fruithub.dao.AppDatabase
 import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
-import com.ligerinc.fruithub.domain.Classification
 
 @Composable
 fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
@@ -117,9 +116,9 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
 fun CameraScreen(
     cameraController:LifecycleCameraController,
     context: Context,
-    classification: List<Classification>
+    navController: NavController
 ){
-    CameraView(cameraController,classification)
+    CameraView(cameraController,navController, context)
 }
 
 @Composable
