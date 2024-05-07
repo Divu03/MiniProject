@@ -3,6 +3,7 @@ package com.ligerinc.fruithub
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
 import android.widget.Toast
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
@@ -12,11 +13,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,12 +25,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
 import java.nio.ByteBuffer
@@ -42,14 +38,13 @@ import java.nio.ByteOrder
 fun CameraView(
     controller: LifecycleCameraController,
     navController: NavController,
-    context: Context
+    context: Context,
+    viewModel : ImageViewModel
 ){
 
     val scope = rememberCoroutineScope()
-    val viewModel = remember { ImageViewModel() } // Create the ImageViewModel internally
     val bitmaps by viewModel.bitmap.collectAsState()
 
-    var capturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var showPreview by remember { mutableStateOf(false) }
 
     Box(
@@ -71,101 +66,41 @@ fun CameraView(
 
             IconButton(onClick = {
                 takePhoto(controller,viewModel::onTakePhoto,context)
-                // Show the captured image preview
                 showPreview = true
-                // Set a timeout to hide the preview after 5 seconds
-                scope.launch {
-                    delay(5000)
-                    showPreview = false
-                    capturedBitmap = null
-                }
             }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_camera_alt_24),
-                    "Click"
+                Image(
+                    painter = painterResource(id = R.drawable.icon_camara),
+                    "Click",
+                    modifier = Modifier.size(50.dp)
                 )
             }
         }
-
+        val capturedBitmap = bitmaps.lastOrNull()
         // Display the captured image preview if available and showPreview is true
         if (showPreview) {
+
             capturedBitmap?.let { bitmap ->
-                Image(
-                    bitmap.asImageBitmap(), // Resize the bitmap to 100x100 pixels
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ){
-                    // Button to send the captured image
-                    Button(onClick = {
-                        scope.launch{
-                            capturedBitmap?.let { bitmap ->
-                                classifyCapturedImage(bitmap,context)
-                            }
-                        }
-                        Toast.makeText(context, "Image sent", Toast.LENGTH_SHORT).show()
-                    }) {
-                        Text("Send")
-                    }
-                    // Button to recapture the image
-                    Button(onClick = {
-                        // Navigate back to the camera screen
+                PreviewScreen(
+                    bitmap = bitmap,
+                    onRetry = {
                         showPreview = false
-                    }) {
-                        Text("Recapture")
+                        viewModel.onTakePhoto(bitmap)
+                              },
+                    onSend = {
+                        // Navigate to the ImageClassificationScreen with the captured bitmap
+                        navController.navigate("imageClassification/${bitmap.hashCode()}")
                     }
-                }
+                )
             }
         }
 
         // Update capturedBitmap when a new bitmap is captured
         if (bitmaps.isNotEmpty()) {
-            capturedBitmap = bitmaps.last() // Update with the latest captured bitmap
+            viewModel.capturedBitmaps[bitmaps.last().hashCode()] = bitmaps.last()    // Update with the latest captured bitmap
         }
     }
 }
 
-@Composable
-fun ImagePreview(
-    bitmap: Bitmap?,
-    onSend: () -> Unit,
-    onRecapture: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp)
-    ) {
-        // Display the captured image preview if available
-        bitmap?.let { bitmap ->
-            Image(
-                bitmap.asImageBitmap(), // Resize the bitmap to fit the screen
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                // Button to send the captured image
-                Button(onClick = onSend) {
-                    Text("Send")
-                }
-                // Button to recapture the image
-                Button(onClick = onRecapture) {
-                    Text("Recapture")
-                }
-            }
-        }
-    }
-}
 
 
 fun preprocessImage(bitmap: Bitmap): ByteBuffer {
@@ -200,10 +135,10 @@ inline fun Bitmap.forEachPixel(action: (r: Int, g: Int, b: Int) -> Unit) {
     }
 }
 
-fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
+fun classifyCapturedImage(bitmap: Bitmap,context:Context): String? {
     try {
         // Load the TFLite model from the assets directory
-        val tfliteModel = FileUtil.loadMappedFile(context, "fruithub.tflite")
+        val tfliteModel = FileUtil.loadMappedFile(context, "fruithub3.tflite")
         val tflite = Interpreter(tfliteModel)
 
         // Preprocess the captured image
@@ -222,34 +157,34 @@ fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
         val predictedClassIndex = probabilities.indices.maxByOrNull { probabilities[it] } ?: -1
 
         val labels = mapOf(
-            0 to "Apple Braeburn",
-            1 to "Apple Crimson Snow",
-            2 to "Apple Golden 1",
-            3 to "Apple Golden 2",
-            4 to "Apple Golden 3",
-            5 to "Apple Granny Smith",
-            6 to "Apple Pink Lady",
-            7 to "Apple Red 1",
-            8 to "Apple Red 2",
-            9 to "Apple Red 3",
-            10 to "Apple Red Delicious",
-            11 to "Apple Red Yellow 1",
-            12 to "Apple Red Yellow 2",
+            0 to "Apple",
+            1 to "Apple",
+            2 to "Apple",
+            3 to "Apple",
+            4 to "Apple",
+            5 to "Apple",
+            6 to "Apple",
+            7 to "Apple",
+            8 to "Apple",
+            9 to "Apple",
+            10 to "Apple",
+            11 to "Apple",
+            12 to "Apple",
             13 to "Apricot",
             14 to "Avocado",
-            15 to "Avocado ripe",
+            15 to "Avocado",
             16 to "Banana",
-            17 to "Banana Lady Finger",
-            18 to "Banana Red",
+            17 to "Banana",
+            18 to "Banana",
             19 to "Beetroot",
             20 to "Blueberry",
             21 to "Cactus fruit",
-            22 to "Cantaloupe 1",
-            23 to "Cantaloupe 2",
+            22 to "Cantaloupe",
+            23 to "Cantaloupe",
             24 to "Carambula",
             25 to "Cauliflower",
-            26 to "Cherry 1",
-            27 to "Cherry 2",
+            26 to "Cherry",
+            27 to "Cherry",
             28 to "Cherry Rainier",
             29 to "Cherry Wax Black",
             30 to "Cherry Wax Red",
@@ -258,9 +193,9 @@ fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
             33 to "Clementine",
             34 to "Cocos",
             35 to "Corn",
-            36 to "Corn Husk",
+            36 to "Corn",
             37 to "Cucumber Ripe",
-            38 to "Cucumber Ripe 2",
+            38 to "Cucumber Ripe",
             39 to "Dates",
             40 to "Eggplant",
             41 to "Fig",
@@ -269,11 +204,11 @@ fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
             44 to "Grape Blue",
             45 to "Grape Pink",
             46 to "Grape White",
-            47 to "Grape White 2",
-            48 to "Grape White 3",
-            49 to "Grape White 4",
-            50 to "Grapefruit Pink",
-            51 to "Grapefruit White",
+            47 to "Grape White",
+            48 to "Grape White",
+            49 to "Grape White",
+            50 to "Grape Pink",
+            51 to "Grape White",
             52 to "Guava",
             53 to "Hazelnut",
             54 to "Huckleberry",
@@ -296,17 +231,17 @@ fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
             71 to "Nectarine Flat",
             72 to "Nut Forest",
             73 to "Nut Pecan",
-            74 to "Onion Red",
-            75 to "Onion Red Peeled",
-            76 to "Onion White",
+            74 to "Onion",
+            75 to "Onion",
+            76 to "Onion",
             77 to "Orange",
             78 to "Papaya",
             79 to "Passion Fruit",
             80 to "Peach",
-            81 to "Peach 2",
-            82 to "Peach Flat",
+            81 to "Peach",
+            82 to "Peach",
             83 to "Pear",
-            84 to "Pear 2",
+            84 to "Pear",
             85 to "Pear Abate",
             86 to "Pear Forelle",
             87 to "Pear Kaiser",
@@ -325,12 +260,12 @@ fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
             100 to "Pineapple Mini",
             101 to "Pitahaya Red",
             102 to "Plum",
-            103 to "Plum 2",
-            104 to "Plum 3",
+            103 to "Plum",
+            104 to "Plum",
             105 to "Pomegranate",
             106 to "Pomelo Sweetie",
             107 to "Potato Red",
-            108 to "Potato Red Washed",
+            108 to "Potato Red",
             109 to "Potato Sweet",
             110 to "Potato White",
             111 to "Quince",
@@ -342,29 +277,24 @@ fun classifyCapturedImage(bitmap: Bitmap,context:Context) {
             117 to "Strawberry Wedge",
             118 to "Tamarillo",
             119 to "Tangelo",
-            120 to "Tomato 1",
-            121 to "Tomato 2",
-            122 to "Tomato 3",
-            123 to "Tomato 4",
-            124 to "Tomato Cherry Red",
-            125 to "Tomato Heart",
-            126 to "Tomato Maroon",
-            127 to "Tomato not Ripened",
-            128 to "Tomato Yellow",
+            120 to "Tomato",
+            121 to "Tomato",
+            122 to "Tomato",
+            123 to "Tomato",
+            124 to "Tomato",
+            125 to "Tomato",
+            126 to "Tomato",
+            127 to "Tomato",
+            128 to "Tomato",
             129 to "Walnut",
             130 to "Watermelon"
         )
-        val predictedClassLabel = labels[predictedClassIndex]
 
-        // Get the probability score of the predicted class
-        val predictedProbability = probabilities[predictedClassIndex]
-
-        // Display the predicted class label and probability to the user
-        val message = "Predicted class: $predictedClassLabel\nProbability: $predictedProbability"
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        return labels[predictedClassIndex]
 
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.d("Model",e.printStackTrace().toString())
         Toast.makeText(context, "Error classifying image", Toast.LENGTH_SHORT).show()
+        return null
     }
 }

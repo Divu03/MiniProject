@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -116,9 +117,10 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
 fun CameraScreen(
     cameraController:LifecycleCameraController,
     context: Context,
-    navController: NavController
+    navController: NavController,
+    viewModel : ImageViewModel
 ){
-    CameraView(cameraController,navController, context)
+    CameraView(cameraController,navController, context, viewModel)
 }
 
 @Composable
@@ -157,4 +159,10 @@ fun FruitInfoScreen(navController: NavHostController, database: AppDatabase, fru
         TopInfo(fruitName, navController)
         FruitInfo(fruitDataRoom, navController)
     }
+}
+
+
+@Composable
+fun ErrorScreen(msg:String){
+    Text("Error Occurred   $msg")
 }

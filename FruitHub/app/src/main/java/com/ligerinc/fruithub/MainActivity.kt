@@ -55,6 +55,8 @@ class MainActivity : ComponentActivity() {
 
     private val db = Firebase.firestore
 
+
+
 // database built
     private val database by lazy {
         Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
@@ -112,7 +114,7 @@ class MainActivity : ComponentActivity() {
                     CameraScreenDestination.route
                 ){
                     composable("Camera"){
-                        CameraScreen(cameraController,applicationContext,navController)
+                        CameraScreen(cameraController,applicationContext,navController,viewModel)
                     }
                 }
                 navigation(
@@ -139,6 +141,22 @@ class MainActivity : ComponentActivity() {
                         FruitInfoScreen(navController,database, id.toInt(), name.toString())
                     }
                 }
+                composable("imageClassification/{bitmapHashCode}") { backStackEntry ->
+                    val bitmapHashCode = backStackEntry.arguments?.getString("bitmapHashCode")?.toIntOrNull()
+
+                    val bitmap = remember { viewModel.capturedBitmaps[bitmapHashCode] }
+                    if (bitmap != null) {
+
+                        ImageClassificationScreen(bitmap, applicationContext, navController, database)
+                    } else {
+                        navController.navigate("err")
+                        Log.d("NavClass","Error screen")
+                    }
+                }
+                composable("err/{msg}"){backStackEntry ->
+                    val msg = backStackEntry.arguments?.getString("msg")
+                    ErrorScreen(msg.toString())
+                }
             }
         }
         lifecycleScope.launch(Dispatchers.IO) {
@@ -160,7 +178,7 @@ class MainActivity : ComponentActivity() {
             }
             if(database.fruitDataDao().isEmptyFL()){
                 database.fruitDataDao().insertAllFL(
-                    FruitList(1,"Apple Braeburn", R.drawable.apple),
+                    FruitList(1,"Apple", R.drawable.apple),
                     FruitList(2,"Apple Crimson Snow", R.drawable.apple_crimson_snow),
                     FruitList(3,"Apricot", R.drawable.apricot),
                     FruitList(4,"Avocado", R.drawable.avocado),
@@ -186,9 +204,9 @@ class MainActivity : ComponentActivity() {
                     FruitList(24,"Fig", R.drawable.fig),
                     FruitList(25,"Ginger root", R.drawable.ginger_root),
                     FruitList(26,"Granadilla", R.drawable.granadilla),
-                    FruitList(27,"Grape blue", R.drawable.grape_blue),
-                    FruitList(28,"Grape pink", R.drawable.grape_pink),
-                    FruitList(29,"GrapeWhite", R.drawable.grape_white),
+                    FruitList(27,"Grape Blue", R.drawable.grape_blue),
+                    FruitList(28,"Grape Pink", R.drawable.grape_pink),
+                    FruitList(29,"Grape White", R.drawable.grape_white),
                     FruitList(30,"Guava", R.drawable.guava),
                     FruitList(31,"Hazelnut", R.drawable.hazelnut),
                     FruitList(32,"Huckleberry", R.drawable.huckleberry),
@@ -205,7 +223,7 @@ class MainActivity : ComponentActivity() {
                     FruitList(43,"Mango Red", R.drawable.mango_red),
                     FruitList(44,"Mangostan", R.drawable.mangostan),
                     FruitList(45,"Maracuja", R.drawable.maracuja),
-                    FruitList(46,"Melon Pieel Sapo", R.drawable.melon_pieel_sapo),
+                    FruitList(46,"Melon Piel de Sapo", R.drawable.melon_pieel_sapo),
                     FruitList(47,"Mulberry", R.drawable.mulberry),
                     FruitList(48,"Necteraine", R.drawable.necteraine),
                     FruitList(49,"Nut Forest", R.drawable.nut_forest),

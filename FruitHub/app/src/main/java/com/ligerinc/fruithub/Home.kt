@@ -706,7 +706,7 @@ fun PhotoGallery(){
 }
 
 @Composable
-fun InfoGrid(titleList: List<String>,valueList: List<String>,iconList: List<Int>,title: String = "Titile"){
+fun InfoGrid(titleList: List<String>,valueList: List<String>,iconList: List<Int>,title: String = "Titile",@DrawableRes iconId: Int = R.drawable.icon_description){
     Column(
         Modifier.fillMaxWidth(),
     ) {
@@ -715,7 +715,7 @@ fun InfoGrid(titleList: List<String>,valueList: List<String>,iconList: List<Int>
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Image(
-                painter = painterResource(id = R.drawable.icon_description),
+                painter = painterResource(id = iconId),
                 contentDescription = null,
                 Modifier
                     .size(44.dp)

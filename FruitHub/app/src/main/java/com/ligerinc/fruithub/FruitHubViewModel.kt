@@ -8,5 +8,4 @@ import androidx.lifecycle.ViewModel
 class FruitHubViewModel : ViewModel() {
     var switchStateExplore by mutableStateOf(false)
     var switchStateSaves by mutableStateOf(false)
-
 }
