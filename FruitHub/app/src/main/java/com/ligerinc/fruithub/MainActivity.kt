@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.ligerinc.fruithub.dao.AppDatabase
+import com.ligerinc.fruithub.dao.Article
 import com.ligerinc.fruithub.dao.FruitDataNetwork
 import com.ligerinc.fruithub.dao.FruitList
 import io.ktor.client.HttpClient
@@ -45,7 +46,7 @@ import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.tasks.await
 
 
 class MainActivity : ComponentActivity() {
@@ -76,6 +77,10 @@ class MainActivity : ComponentActivity() {
 
         auth = Firebase.auth
         sharedPrefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val email = sharedPrefs.getString("email", "") ?: ""
+        Log.d("email is what",email)
+        fruitHubViewModel.email = email
+        Log.d("email is view",fruitHubViewModel.email)
 
         //Ask for Permission
         if(!hasRequiredPermissions()){
@@ -110,14 +115,19 @@ class MainActivity : ComponentActivity() {
                     AuthenticationScreen.route
                 ){
                     composable("Login"){
-                        LoginScreen(navController, auth, applicationContext, fruitHubViewModel){ isLoggedIn ->
+                        LoginScreen(navController, auth, applicationContext, fruitHubViewModel,{
+                                isLoggedIn ->
                             updateLoginState(isLoggedIn)
-
+                        }){ email ->
+                            saveEmail(email)
                         }
                     }
                     composable("SignUp"){
-                        SignupScreen(navController, auth, applicationContext, fruitHubViewModel){ isLoggedIn ->
+                        SignupScreen(navController, auth, applicationContext, fruitHubViewModel,{
+                                isLoggedIn ->
                             updateLoginState(isLoggedIn)
+                        }){ email ->
+                            saveEmail(email)
                         }
                     }
                 }
@@ -134,7 +144,7 @@ class MainActivity : ComponentActivity() {
                     ExploreScreen.route
                 ){
                     composable("Explore"){
-                        ExploreScreen(fruitHubViewModel,navController,database.fruitDataDao())
+                        ExploreScreen(fruitHubViewModel,navController,database.fruitDataDao(),database.articleDao())
                     }
                 }
                 navigation(
@@ -175,9 +185,9 @@ class MainActivity : ComponentActivity() {
                     UserScreen.route
                 ){
                     composable("User"){
-                        UserScreen(navController,fruitHubViewModel,auth, applicationContext,isUserLoggedIn()){ isLoggedIn ->
+                        UserScreen(navController,fruitHubViewModel,auth, applicationContext,isUserLoggedIn(),{ isLoggedIn ->
                             updateLoginState(isLoggedIn)
-                        }
+                        },sharedPrefs)
                     }
                 }
                 composable("fInfo/{id}/{name}") { backStackEntry ->
@@ -193,9 +203,14 @@ class MainActivity : ComponentActivity() {
                     val msg = backStackEntry.arguments?.getString("msg")
                     ErrorScreen(msg.toString())
                 }
+
+                composable("article/"){
+
+                }
             }
         }
         lifecycleScope.launch(Dispatchers.IO) {
+            database.articleDao().insertArticles(fetchArticlesFromFirestore())
             if (database.fruitDataDao().isEmptyFDR()) {
                 try {
                     db.collection("Fruit_info").get()
@@ -309,6 +324,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private suspend fun fetchArticlesFromFirestore(): List<Article> {
+        val articles = mutableListOf<Article>()
+        try {
+            val querySnapshot = db.collection("Fruit_Article").get().await()
+            for (document in querySnapshot.documents) {
+                val id = document.id
+                val title = document.getString("title") ?: ""
+                val body = document.getString("body") ?: ""
+                val portal = document.getString("portal") ?: ""
+                val imageName = document.getString("imageName") ?: ""
+                val link = document.getString("link") ?: ""
+                val article = Article(id, title, body, portal, imageName,link)
+                articles.add(article)
+            }
+        } catch (e: Exception) {
+            Log.e("FirestoreError", "Error fetching articles: $e")
+        }
+        return articles
+    }
+
     private fun saveFruitDataToDatabase(fruitDataNetwork: FruitDataNetwork) {
         lifecycleScope.launch(Dispatchers.IO) {
             val fruitDataRooms = fruitDataNetwork.toFruitDataRoom()
@@ -341,6 +376,10 @@ class MainActivity : ComponentActivity() {
     private fun updateLoginState(isLoggedIn: Boolean) {
         // Call the function with the appropriate context
         saveLoginState(applicationContext, isLoggedIn)
+    }
+
+    private fun saveEmail(email: String) {
+        sharedPrefs.edit().putString("email", email).apply()
     }
 }
 

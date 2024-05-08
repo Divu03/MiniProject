@@ -30,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -43,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import com.ligerinc.fruithub.dao.Article
+import com.ligerinc.fruithub.dao.ArticleDao
 import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitList
 
@@ -109,18 +110,33 @@ fun ArticlesExplore(
 }
 
 @Composable
-fun SearchBarExplore(fruitDataDao: FruitDataDao) {
+fun SearchBarExplore(
+    fruitDataDao: FruitDataDao,
+    articleDao: ArticleDao,
+    isArticleView: Boolean
+) {
     var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
-    var suggestions by remember { mutableStateOf<List<FruitList>>(emptyList()) }
-    val context = LocalContext.current
+    var suggestions by remember { mutableStateOf<List<Any>>(emptyList()) } // Use Any to handle both FruitList and Article
+
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(searchPhrase.text) {
         if (searchPhrase.text.isNotBlank()) {
-            val observer = Observer<List<FruitList>> { fruits ->
-                suggestions = fruits
+            if (isArticleView) {
+                val observer = Observer<List<Article>> { articles ->
+                    suggestions = articles
+                }
+                // Assuming you have a function to search articles by name
+                // Replace this with your actual DAO function
+                articleDao.searchArticlesByName(searchPhrase.text)
+                    .observe(lifecycleOwner, observer)
+            } else {
+                val observer = Observer<List<FruitList>> { fruits ->
+                    suggestions = fruits
+                }
+                fruitDataDao.searchByNameFL(searchPhrase.text)
+                    .observe(lifecycleOwner, observer)
             }
-            fruitDataDao.searchByNameFL(searchPhrase.text).observe(lifecycleOwner, observer)
         } else {
             suggestions = emptyList()
         }
@@ -136,18 +152,30 @@ fun SearchBarExplore(fruitDataDao: FruitDataDao) {
                 .padding(horizontal = 30.dp, vertical = 5.dp),
             shape = RoundedCornerShape(20.dp)
         )
-        suggestions.forEach { fruit ->
-            Text(
-                text = fruit.name,
-                modifier = Modifier
-                    .clickable {
-                        // on click API call of FruitHub from FireBase
-                    }
-                    .padding(8.dp)
-            )
+        suggestions.forEach { suggestion ->
+            if (isArticleView) {
+                Text(
+                    text = (suggestion as Article).title,
+                    modifier = Modifier
+                        .clickable {
+                            // Handle click on article
+                        }
+                        .padding(8.dp)
+                )
+            } else {
+                Text(
+                    text = (suggestion as FruitList).name,
+                    modifier = Modifier
+                        .clickable {
+                            // Handle click on fruit
+                        }
+                        .padding(8.dp)
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun TopExplore(fruitHubViewModel: FruitHubViewModel,navController: NavController){

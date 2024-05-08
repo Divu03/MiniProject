@@ -1,7 +1,5 @@
 package com.ligerinc.fruithub
 
-// LoginStateUtil.kt
-
 import android.content.Context
 
 fun saveLoginState(context: Context, isLoggedIn: Boolean) {

@@ -1,6 +1,7 @@
 package com.ligerinc.fruithub
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.layout.Arrangement
@@ -34,12 +35,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.ligerinc.fruithub.dao.AppDatabase
+import com.ligerinc.fruithub.dao.ArticleDao
 import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
 import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
-fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
+fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao,articleDao: ArticleDao){
     Scaffold(
         topBar = {
             Column(
@@ -47,7 +49,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
                 modifier = Modifier.padding(5.dp)
             ){
                 TopExplore(fruitHubViewModel,navController)
-                SearchBarExplore(fruitDataDao)
+                SearchBarExplore(fruitDataDao, articleDao,fruitHubViewModel.switchStateExplore)
             }
         },
         bottomBar = {
@@ -164,19 +166,21 @@ fun UserScreen(navController: NavController,
                fruitHubViewModel: FruitHubViewModel,
                auth: FirebaseAuth,context: Context,
                isUserLoggedIn:Boolean,
-               updateLoginState: (Boolean) -> Unit){
+               updateLoginState: (Boolean) -> Unit,
+               sharedPreferences: SharedPreferences){
 
     Scaffold(
         bottomBar = { BottomNavigation(4, navController) },
         topBar = { UserTopComponent() }
     ) { innerPadding ->
+        val email = sharedPreferences.getString("email", "") ?: ""
         if(isUserLoggedIn){
             Column(
                 Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
                 ) {
-                UserInfo(fruitHubViewModel.email)
+                UserInfo(email)
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -244,7 +248,8 @@ fun LoginScreen(
     auth: FirebaseAuth,
     context: Context,
     fruitHubViewModel: FruitHubViewModel,
-    updateLoginState: (Boolean) -> Unit
+    updateLoginState: (Boolean) -> Unit,
+    saveEmail:(String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -284,6 +289,7 @@ fun LoginScreen(
                         }
                     }
                 updateLoginState(true)
+                saveEmail(email)
             }
         ) {
             Text("Login")
@@ -303,9 +309,11 @@ fun SignupScreen(
     auth: FirebaseAuth,
     context: Context,
     fruitHubViewModel: FruitHubViewModel,
-    updateLoginState: (Boolean) -> Unit
+    updateLoginState: (Boolean) -> Unit,
+    saveEmail:(String) -> Unit
 ) {
     var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -314,8 +322,8 @@ fun SignupScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
-            value = fruitHubViewModel.email,
-            onValueChange = { fruitHubViewModel.email = it },
+            value = email,
+            onValueChange = { email = it },
             label = { Text("Email") }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -343,6 +351,7 @@ fun SignupScreen(
                         }
                     }
                 updateLoginState(true)
+                saveEmail(email)
             }
         ) {
             Text("Sign up")

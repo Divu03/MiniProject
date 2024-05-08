@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
@@ -82,9 +83,26 @@ interface FruitDataDao{
 
 }
 
-@Database(entities = [FruitDataRoom::class,FruitList::class], version = 1, exportSchema = false)
+@Dao
+interface ArticleDao {
+
+    @Query("SELECT * FROM Article")
+    fun getAllArticles(): LiveData<List<Article>>
+
+    @Query("SELECT * FROM Article WHERE title LIKE '%' || :name || '%'")
+    fun searchArticlesByName(name: String): LiveData<List<Article>>
+
+    @Query("SELECT * FROM Article WHERE id = :id")
+    fun getArticleById(id: String): LiveData<Article>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertArticles(articles: List<Article>)
+}
+
+
+@Database(entities = [FruitDataRoom::class,FruitList::class,Article::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun fruitDataDao(): FruitDataDao
+    abstract fun articleDao(): ArticleDao
 }
 
 @Entity
@@ -93,4 +111,14 @@ data class FruitList(
     val name: String,
     @DrawableRes val imageId : Int,
     @DrawableRes val infoId :Int
+)
+
+@Entity
+data class Article(
+    @PrimaryKey val id: String,
+    val title: String,
+    val body: String,
+    val portal: String,
+    val imageName: String,
+    val link: String
 )
