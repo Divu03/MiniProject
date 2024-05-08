@@ -8,6 +8,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -33,12 +34,11 @@ fun ArticleScreen(
     navController: NavController,
     articleTitle: String,
     articlePortal: String,
-    articleImageName: String,
+    @DrawableRes articleImage: Int,
     articleBody: String,
     portalLink: String,
     context: Context
 ) {
-    val resourceId = context.getDrawableResourceId(articleImageName)
 
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -59,7 +59,7 @@ fun ArticleScreen(
             )
 
             Image(
-                painter = painterResource(id = resourceId), // Use the retrieved resource ID
+                painter = painterResource(id = articleImage), // Use the retrieved resource ID
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()

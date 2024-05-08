@@ -74,7 +74,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
 
 
 @Composable
-fun MainActivityScreen(navController: NavController) {
+fun MainActivityScreen(navController: NavController,context: Context,articleDao: ArticleDao) {
     Scaffold(
         bottomBar = { BottomNavigation(0,navController) },
         topBar = { TopComponent()}
@@ -85,10 +85,9 @@ fun MainActivityScreen(navController: NavController) {
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            PopularArticles()
+            PopularArticles(navController,articleDao,context)
             ExploreFruit(navController)
             RecentFruit(navController)
-            RecentArticles()
         }
     }
 }

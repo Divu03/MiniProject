@@ -1,5 +1,6 @@
 package com.ligerinc.fruithub
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -40,6 +41,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,10 +59,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ligerinc.fruithub.dao.ArticleDao
 import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
-fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermelon_article){
+fun ArticlesHome(articleId: String="001",articleTitle: String, articleImageId: Int = R.drawable.watermelon_article,navController: NavController){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -68,6 +71,9 @@ fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermel
         modifier = Modifier
             .size(width = 220.dp, height = 197.dp)
             .padding(10.dp)
+            .clickable {
+                navController.navigate("article/$articleId")
+            }
     ){
         Column(
             Modifier
@@ -296,7 +302,8 @@ fun TopComponent(){
 
 
 @Composable
-fun PopularArticles(){
+fun PopularArticles(navController: NavController,articleDao: ArticleDao,context:Context){
+    val popularArticles by articleDao.getAllArticles().observeAsState()
     Column(
         Modifier
             .fillMaxWidth()
@@ -340,10 +347,14 @@ fun PopularArticles(){
         Row(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
-            ArticlesHome(articleTitle = "Watermelon")
-            ArticlesHome(articleTitle = "Watermelon")
-            ArticlesHome(articleTitle = "Watermelon")
-            ArticlesHome(articleTitle = "Watermelon")
+            popularArticles?.forEach { article ->
+                ArticlesHome(
+                    articleId = article.id, // Pass the article ID
+                    articleTitle = article.title,
+                    articleImageId = article.imageName,
+                    navController
+                )
+            }
         }
     }
 
@@ -397,11 +408,11 @@ fun ExploreFruit(
         Row(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
-            FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
+            FruitCard(navController,FruitList(48,"Necteraine", R.drawable.necteraine,R.drawable.necteraine_info))
+            FruitCard(navController,FruitList(81,"Raspberry", R.drawable.raspberry,R.drawable.raspberry_info))
+            FruitCard(navController,FruitList(78,"Potato White", R.drawable.potato_white,R.drawable.potato_white_info))
+            FruitCard(navController,FruitList(43,"Mango Red", R.drawable.mango_red,R.drawable.mango_red_info))
+            FruitCard(navController,FruitList(29,"Grape White", R.drawable.grape_white,R.drawable.grape_white_info))
             FruitCard(navController)
         }
     }
@@ -455,18 +466,18 @@ fun RecentFruit(navController: NavController){
             Modifier.horizontalScroll(rememberScrollState())
         ) {
             FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
-            FruitCard(navController)
+            FruitCard(navController,FruitList(8,"Cactus Fruit", R.drawable.cactus_fruit,R.drawable.cactus_fruit_info))
+            FruitCard(navController,FruitList(53,"Papaya", R.drawable.papaya,R.drawable.papaya_info))
+            FruitCard(navController,FruitList(70,"Physalis with Husk", R.drawable.physalis_with_husk,R.drawable.physalis_with_husk_info))
+            FruitCard(navController,FruitList(82,"Redcurrant", R.drawable.redcurrant,R.drawable.redcurrant_info))
+            FruitCard(navController,FruitList(87,"Tangelo", R.drawable.tangelo,R.drawable.tangelo_info))
         }
     }
 }
 
 
 @Composable
-fun RecentArticles(){
+fun RecentArticles(navController: NavController){
     Column(
         Modifier
             .fillMaxWidth()
@@ -510,10 +521,10 @@ fun RecentArticles(){
         Row(
             Modifier.horizontalScroll(rememberScrollState())
         ) {
-            ArticlesHome(articleTitle = "Watermelon")
-            ArticlesHome(articleTitle = "Watermelon")
-            ArticlesHome(articleTitle = "Watermelon")
-            ArticlesHome(articleTitle = "Watermelon")
+            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+            ArticlesHome(articleTitle = "Watermelon", navController = navController)
         }
     }
 
@@ -758,3 +769,4 @@ fun InfoGrid(titleList: List<String>,valueList: List<String>,iconList: List<Int>
         }
     }
 }
+

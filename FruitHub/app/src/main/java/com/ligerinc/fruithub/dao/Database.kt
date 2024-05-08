@@ -119,6 +119,6 @@ data class Article(
     val title: String,
     val body: String,
     val portal: String,
-    val imageName: String,
+    @DrawableRes val imageName: Int,
     val link: String
 )

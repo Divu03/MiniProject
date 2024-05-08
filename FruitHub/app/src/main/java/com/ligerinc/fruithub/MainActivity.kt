@@ -18,6 +18,7 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -44,6 +45,7 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.websocket.Frame
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -136,7 +138,7 @@ class MainActivity : ComponentActivity() {
                 MainActivityScreen.route
                 ){
                     composable("Home") {
-                        MainActivityScreen(navController)
+                        MainActivityScreen(navController,applicationContext,database.articleDao())
                     }
                 }
                 navigation(
@@ -204,8 +206,24 @@ class MainActivity : ComponentActivity() {
                     ErrorScreen(msg.toString())
                 }
 
-                composable("article/"){
+                composable("article/{id}"){
+                     backStackEntry->
+                    val id = backStackEntry.arguments?.getString("id").toString()
+                    val art = database.articleDao().getArticleById(id).observeAsState()
 
+                    if (art.value != null) {
+                        ArticleScreen(
+                            navController = navController,
+                            articleTitle = art.value!!.title,
+                            articlePortal = art.value!!.portal,
+                            articleImage = art.value!!.imageName,
+                            articleBody = art.value!!.body,
+                            portalLink = art.value!!.link,
+                            context = applicationContext
+                        )
+                    } else {
+                        Frame.Text("Article not found")
+                    }
                 }
             }
         }
@@ -333,9 +351,9 @@ class MainActivity : ComponentActivity() {
                 val title = document.getString("title") ?: ""
                 val body = document.getString("body") ?: ""
                 val portal = document.getString("portal") ?: ""
-                val imageName = document.getString("imageName") ?: ""
                 val link = document.getString("link") ?: ""
-                val article = Article(id, title, body, portal, imageName,link)
+                val drawableResourceId = DrawableMapper.getDrawableResourceId(id)
+                val article = Article(id, title, body, portal, drawableResourceId,link)
                 articles.add(article)
             }
         } catch (e: Exception) {
@@ -433,3 +451,17 @@ fun takePhoto(
     )
 }
 
+object DrawableMapper {
+    private val drawableMap = mapOf(
+        "001" to R.drawable.watermelon_article,
+        "002" to R.drawable.mango_article,
+        "003" to R.drawable.kiwi_article,
+        "004" to R.drawable.pineapple_atricle,
+        "005" to R.drawable.strawberry_article,
+        "006" to R.drawable.blueberry_article
+    )
+
+    fun getDrawableResourceId(imageName: String): Int {
+        return drawableMap[imageName] ?: R.drawable.strawberry_info
+    }
+}
