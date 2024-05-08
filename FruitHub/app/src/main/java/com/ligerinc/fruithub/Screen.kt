@@ -92,7 +92,7 @@ fun MainActivityScreen(navController: NavController) {
 }
 
 @Composable
-fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
+fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao,isUserLoggedIn:Boolean){
     var s by remember { mutableStateOf(TextFieldValue("")) }
 
     Scaffold(
@@ -108,7 +108,7 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 BottomNavigation(activityIndex = 3, navController)
             }
     ) { innerPadding ->
-        if(fruitHubViewModel.authenticated){
+        if(isUserLoggedIn){
             Column(
                 Modifier
                     .fillMaxSize()
@@ -160,30 +160,36 @@ fun CameraScreen(
 }
 
 @Composable
-fun UserScreen(navController: NavController,fruitHubViewModel: FruitHubViewModel,auth: FirebaseAuth,context: Context){
+fun UserScreen(navController: NavController,
+               fruitHubViewModel: FruitHubViewModel,
+               auth: FirebaseAuth,context: Context,
+               isUserLoggedIn:Boolean,
+               updateLoginState: (Boolean) -> Unit){
 
     Scaffold(
         bottomBar = { BottomNavigation(4, navController) },
         topBar = { UserTopComponent() }
     ) { innerPadding ->
-        if(fruitHubViewModel.authenticated){
+        if(isUserLoggedIn){
             Column(
                 Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
                 ) {
-                UserInfo()
+                UserInfo(fruitHubViewModel.email)
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
                 )
-                        OptionAccount("App Appearance", R.drawable.icon_appearence)
+                OptionAccount("App Appearance", R.drawable.icon_appearence)
                 OptionAccount("Account & Security", R.drawable.icon_acc_sec)
                 OptionAccount("Notification", R.drawable.icon_notification)
                 OptionAccount("History", R.drawable.icon_history_user)
                 OptionAccount("Help & Support", R.drawable.icon_help)
-                LogOut(auth, context, fruitHubViewModel, navController)
+                LogOut(auth, context, fruitHubViewModel, navController){isLoggedIn ->
+                    updateLoginState(isLoggedIn)
+                }
             }
         }
         else{
@@ -237,7 +243,8 @@ fun LoginScreen(
     navController: NavController,
     auth: FirebaseAuth,
     context: Context,
-    fruitHubViewModel: FruitHubViewModel
+    fruitHubViewModel: FruitHubViewModel,
+    updateLoginState: (Boolean) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -276,6 +283,7 @@ fun LoginScreen(
                             ).show()
                         }
                     }
+                updateLoginState(true)
             }
         ) {
             Text("Login")
@@ -294,9 +302,9 @@ fun SignupScreen(
     navController: NavController,
     auth: FirebaseAuth,
     context: Context,
-    fruitHubViewModel: FruitHubViewModel
+    fruitHubViewModel: FruitHubViewModel,
+    updateLoginState: (Boolean) -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
@@ -306,8 +314,8 @@ fun SignupScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
-            value = email,
-            onValueChange = { email = it },
+            value = fruitHubViewModel.email,
+            onValueChange = { fruitHubViewModel.email = it },
             label = { Text("Email") }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -320,7 +328,7 @@ fun SignupScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                auth.createUserWithEmailAndPassword(email, password)
+                auth.createUserWithEmailAndPassword(fruitHubViewModel.email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             navController.navigate("Home")
@@ -334,6 +342,7 @@ fun SignupScreen(
                             ).show()
                         }
                     }
+                updateLoginState(true)
             }
         ) {
             Text("Sign up")

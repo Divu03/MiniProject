@@ -56,7 +56,7 @@ fun UserTopComponent(){
 }
 @Preview
 @Composable
-fun UserInfo(userName:String = "Demo User", userEmail:String = "email@email.com",userProfile: Int = R.drawable.icon_app){
+fun UserInfo( userEmail:String = "email@email.com",userProfile: Int = R.drawable.user_profile){
     Row (
         Modifier
             .fillMaxWidth()
@@ -67,23 +67,11 @@ fun UserInfo(userName:String = "Demo User", userEmail:String = "email@email.com"
         Image(
             painterResource(id = userProfile),
             contentDescription = null,
-            Modifier.size(50.dp)
+            Modifier.size(50.dp).padding(10.dp)
         )
         Column(
             Modifier.fillMaxWidth(.8F)
         ) {
-            Text(
-                text = userName,
-                fontFamily = FontFamily(
-                    Font(resId = R.font.jaldi_bold,
-                        FontWeight.Normal)
-                ),
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp, 0.dp)
-                    .height(25.dp),
-            )
             Text(
                 text = userEmail,
                 fontFamily = FontFamily(
@@ -133,7 +121,11 @@ fun OptionAccount(oName:String ="Option name", imageIDN: Int =R.drawable.icon_ap
 }
 
 @Composable
-fun LogOut(auth: FirebaseAuth,context:Context,fruitHubViewModel: FruitHubViewModel,navController: NavController){
+fun LogOut(auth: FirebaseAuth,
+           context:Context,fruitHubViewModel:
+           FruitHubViewModel,
+           navController: NavController,
+           updateLoginState: (Boolean) -> Unit){
     Row (
         Modifier
             .fillMaxWidth()
@@ -146,6 +138,7 @@ fun LogOut(auth: FirebaseAuth,context:Context,fruitHubViewModel: FruitHubViewMod
                 ).show()
                 fruitHubViewModel.authenticated = false
                 navController.navigate(MainActivityScreen.route)
+                updateLoginState(false)
             },
         horizontalArrangement = Arrangement.spacedBy(25.dp),
         verticalAlignment = Alignment.CenterVertically

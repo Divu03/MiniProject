@@ -2,6 +2,7 @@ package com.ligerinc.fruithub
 
 import android.Manifest
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -50,6 +51,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 //Firebase authentication
     private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPrefs: SharedPreferences
 
 // http client
     private val httpClient = HttpClient(Android) {
@@ -73,6 +75,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
+        sharedPrefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
         //Ask for Permission
         if(!hasRequiredPermissions()){
@@ -107,10 +110,15 @@ class MainActivity : ComponentActivity() {
                     AuthenticationScreen.route
                 ){
                     composable("Login"){
-                        LoginScreen(navController, auth, applicationContext, fruitHubViewModel)
+                        LoginScreen(navController, auth, applicationContext, fruitHubViewModel){ isLoggedIn ->
+                            updateLoginState(isLoggedIn)
+
+                        }
                     }
                     composable("SignUp"){
-                        SignupScreen(navController, auth, applicationContext, fruitHubViewModel)
+                        SignupScreen(navController, auth, applicationContext, fruitHubViewModel){ isLoggedIn ->
+                            updateLoginState(isLoggedIn)
+                        }
                     }
                 }
 
@@ -158,7 +166,7 @@ class MainActivity : ComponentActivity() {
                     MySaveScreen.route
                 ){
                     composable("MySave"){
-                        MySaveScreen(fruitHubViewModel, navController,database.fruitDataDao())
+                        MySaveScreen(fruitHubViewModel, navController,database.fruitDataDao(),isUserLoggedIn())
 
                     }
                 }
@@ -167,7 +175,9 @@ class MainActivity : ComponentActivity() {
                     UserScreen.route
                 ){
                     composable("User"){
-                        UserScreen(navController,fruitHubViewModel,auth, applicationContext)
+                        UserScreen(navController,fruitHubViewModel,auth, applicationContext,isUserLoggedIn()){ isLoggedIn ->
+                            updateLoginState(isLoggedIn)
+                        }
                     }
                 }
                 composable("fInfo/{id}/{name}") { backStackEntry ->
@@ -322,6 +332,16 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.CAMERA
         )
     }
+
+    private fun isUserLoggedIn(): Boolean {
+        // Retrieve the login state from SharedPreferences
+        return sharedPrefs.getBoolean("isLoggedIn", false)
+    }
+
+    private fun updateLoginState(isLoggedIn: Boolean) {
+        // Call the function with the appropriate context
+        saveLoginState(applicationContext, isLoggedIn)
+    }
 }
 
 //for back staking removing if changing the graph of the navigation
@@ -373,3 +393,4 @@ fun takePhoto(
         }
     )
 }
+

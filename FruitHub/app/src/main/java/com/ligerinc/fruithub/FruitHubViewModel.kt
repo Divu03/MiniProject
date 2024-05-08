@@ -9,4 +9,5 @@ class FruitHubViewModel : ViewModel() {
     var switchStateExplore by mutableStateOf(false)
     var switchStateSaves by mutableStateOf(false)
     var authenticated by mutableStateOf(false)
+    var email by mutableStateOf("")
 }
