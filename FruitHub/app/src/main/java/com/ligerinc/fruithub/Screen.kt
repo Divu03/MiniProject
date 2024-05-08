@@ -94,20 +94,21 @@ fun MainActivityScreen(navController: NavController) {
 @Composable
 fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
     var s by remember { mutableStateOf(TextFieldValue("")) }
-    if(fruitHubViewModel.authenticated){
-        Scaffold(
-            topBar = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(5.dp)
-                ) {
-                    TopSaves(fruitHubViewModel, navController)
-                    s = searchBarSaves()
-                }
-            }, bottomBar = {
+
+    Scaffold(
+        topBar = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(5.dp)
+            ) {
+                TopSaves(fruitHubViewModel, navController)
+                s = searchBarSaves()
+            }
+                 }, bottomBar = {
                 BottomNavigation(activityIndex = 3, navController)
             }
-        ) { innerPadding ->
+    ) { innerPadding ->
+        if(fruitHubViewModel.authenticated){
             Column(
                 Modifier
                     .fillMaxSize()
@@ -121,30 +122,31 @@ fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControlle
                 }
             }
         }
-    }
-    else{
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+        else{
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
             ) {
-                Text(
-                    text = "Login to access the functionality",
-                    style = MaterialTheme.typography.headlineLarge
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
-                    Text(text = "Login")
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Login to access the functionality",
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
+                        Text(text = "Login")
+                    }
                 }
             }
         }
     }
+
 }
 
 @Composable
@@ -160,50 +162,50 @@ fun CameraScreen(
 @Composable
 fun UserScreen(navController: NavController,fruitHubViewModel: FruitHubViewModel,auth: FirebaseAuth,context: Context){
 
-    if(fruitHubViewModel.authenticated){
-        Scaffold(
-            bottomBar = { BottomNavigation(4, navController) },
-            topBar = { UserTopComponent() }
-        ) { innerPadding ->
+    Scaffold(
+        bottomBar = { BottomNavigation(4, navController) },
+        topBar = { UserTopComponent() }
+    ) { innerPadding ->
+        if(fruitHubViewModel.authenticated){
             Column(
                 Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-            ) {
+                ) {
                 UserInfo()
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
                 )
-                OptionAccount("App Appearance", R.drawable.icon_appearence)
+                        OptionAccount("App Appearance", R.drawable.icon_appearence)
                 OptionAccount("Account & Security", R.drawable.icon_acc_sec)
                 OptionAccount("Notification", R.drawable.icon_notification)
                 OptionAccount("History", R.drawable.icon_history_user)
                 OptionAccount("Help & Support", R.drawable.icon_help)
-                LogOut(auth, context)
+                LogOut(auth, context, fruitHubViewModel, navController)
             }
         }
-    }
-    else{
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+        else{
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
             ) {
-                Text(
-                    text = "Login to access the functionality",
-                    style = MaterialTheme.typography.headlineLarge
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
-                    Text(text = "Login")
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Login to access the functionality",
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
+                        Text(text = "Login")
+                    }
                 }
             }
         }

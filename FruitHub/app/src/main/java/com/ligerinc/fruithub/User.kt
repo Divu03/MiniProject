@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -132,7 +133,7 @@ fun OptionAccount(oName:String ="Option name", imageIDN: Int =R.drawable.icon_ap
 }
 
 @Composable
-fun LogOut(auth: FirebaseAuth,context:Context){
+fun LogOut(auth: FirebaseAuth,context:Context,fruitHubViewModel: FruitHubViewModel,navController: NavController){
     Row (
         Modifier
             .fillMaxWidth()
@@ -143,6 +144,8 @@ fun LogOut(auth: FirebaseAuth,context:Context){
                     "Logged out successfully",
                     Toast.LENGTH_SHORT
                 ).show()
+                fruitHubViewModel.authenticated = false
+                navController.navigate(MainActivityScreen.route)
             },
         horizontalArrangement = Arrangement.spacedBy(25.dp),
         verticalAlignment = Alignment.CenterVertically
