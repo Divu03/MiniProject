@@ -77,11 +77,11 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel,navController: NavController){
     }
 }
 val savedfruits : List<FruitList> = listOf(
-    FruitList(90,"Watermelon",R.drawable.watermelon),
-    FruitList(1,"Apple Braeburn",R.drawable.apple),
-    FruitList(5,"Banana",R.drawable.banana),
-    FruitList(12,"Cherry",R.drawable.cherry),
-    FruitList(10,"Carambula",R.drawable.carambula)
+    FruitList(90,"Watermelon",R.drawable.watermelon,R.drawable.carambula_info),
+    FruitList(1,"Apple Braeburn",R.drawable.apple,R.drawable.carambula_info),
+    FruitList(5,"Banana",R.drawable.banana,R.drawable.carambula_info),
+    FruitList(12,"Cherry",R.drawable.cherry,R.drawable.carambula_info),
+    FruitList(10,"Carambula",R.drawable.carambula,R.drawable.carambula_info)
 )
 
 @Composable

@@ -91,5 +91,6 @@ abstract class AppDatabase : RoomDatabase() {
 data class FruitList(
     @PrimaryKey val id: Int,
     val name: String,
-    @DrawableRes val imageId : Int
+    @DrawableRes val imageId : Int,
+    @DrawableRes val infoId :Int
 )

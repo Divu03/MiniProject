@@ -24,18 +24,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ligerinc.fruithub.dao.FruitDataRoom
+import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
-fun FruitInfo(fDO: FruitDataRoom?, navController: NavHostController){
+fun FruitInfo(fDO: FruitDataRoom?, navController: NavHostController, fDL: FruitList?){
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
     ) {
 
-        if (fDO != null) {
+        if (fDO != null && fDL != null) {
             Image(
-                painter = painterResource(id = R.drawable.strawberry_info),
+                painter = painterResource(id = fDL.infoId),
                 contentDescription = null,
                 Modifier
                     .fillMaxWidth()

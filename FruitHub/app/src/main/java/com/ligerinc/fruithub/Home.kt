@@ -121,7 +121,7 @@ fun ArticlesHome(articleTitle: String, articleImageId: Int = R.drawable.watermel
 @Composable
 fun FruitCard(
     navController: NavController,
-    fruitList: FruitList = FruitList(90,"Watermelon",R.drawable.watermelon)
+    fruitList: FruitList = FruitList(90,"Watermelon",R.drawable.watermelon,R.drawable.carambula_info)
 ){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(

@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.ligerinc.fruithub.dao.AppDatabase
 import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
+import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
 fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
@@ -154,10 +155,11 @@ fun FruitInfoScreen(navController: NavHostController, database: AppDatabase, fru
     val fruitDataDao = database.fruitDataDao()
 
     val fruitDataRoom: FruitDataRoom? by fruitDataDao.getByIdFDR(fruitId.toString()).observeAsState()
+    val fruitDataList: FruitList? by fruitDataDao.getByNameFL(fruitName).observeAsState()
 
     Column {
         TopInfo(fruitName, navController)
-        FruitInfo(fruitDataRoom, navController)
+        FruitInfo(fruitDataRoom, navController,fruitDataList)
     }
 }
 

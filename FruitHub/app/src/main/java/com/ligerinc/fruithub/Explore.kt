@@ -194,11 +194,11 @@ fun TopExplore(fruitHubViewModel: FruitHubViewModel,navController: NavController
 
 
 val fruitlist : List<FruitList> = listOf(
-    FruitList(1,"Apple Braeburn",R.drawable.apple),
-    FruitList(5,"Banana",R.drawable.banana),
-    FruitList(90,"Watermelon",R.drawable.watermelon),
-    FruitList(12,"Cherry",R.drawable.cherry),
-    FruitList(10,"Carambula",R.drawable.carambula)
+    FruitList(1,"Apple Braeburn",R.drawable.apple,R.drawable.apple_braeburn_info),
+    FruitList(5,"Banana",R.drawable.banana,R.drawable.banana_info),
+    FruitList(90,"Watermelon",R.drawable.watermelon,R.drawable.watermelon),
+    FruitList(12,"Cherry",R.drawable.cherry,R.drawable.cherry_wax_red_info),
+    FruitList(10,"Carambula",R.drawable.carambula,R.drawable.carambula_info)
 )
 
 @Composable
