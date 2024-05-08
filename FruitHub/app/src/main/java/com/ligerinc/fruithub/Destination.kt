@@ -20,3 +20,7 @@ object CameraScreenDestination:Destination{
 object UserScreen:Destination{
     override val route = "UserScreen"
 }
+
+object AuthenticationScreen:Destination{
+    override val route = "Auth"
+}

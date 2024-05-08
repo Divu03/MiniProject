@@ -1,7 +1,9 @@
 package com.ligerinc.fruithub
 
 import android.content.Context
+import android.widget.Toast
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,10 +27,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.FirebaseAuth
 import com.ligerinc.fruithub.dao.AppDatabase
 import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
@@ -85,30 +94,54 @@ fun MainActivityScreen(navController: NavController) {
 @Composable
 fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao){
     var s by remember { mutableStateOf(TextFieldValue("")) }
+    if(fruitHubViewModel.authenticated){
         Scaffold(
-        topBar = {
+            topBar = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    TopSaves(fruitHubViewModel, navController)
+                    s = searchBarSaves()
+                }
+            }, bottomBar = {
+                BottomNavigation(activityIndex = 3, navController)
+            }
+        ) { innerPadding ->
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(5.dp)
-            ){
-                TopSaves(fruitHubViewModel,navController)
-                s = searchBarSaves()
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (!fruitHubViewModel.switchStateSaves) {
+                    FruitsSaved(navController, s)
+                } else {
+                    ArticlesExplore("Why You Should Never Store Watermelon In A Fridge")
+                }
             }
-        }, bottomBar = {
-            BottomNavigation(activityIndex = 3,navController)
         }
-    ) { innerPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+    }
+    else{
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            if (!fruitHubViewModel.switchStateSaves){
-                FruitsSaved(navController,s)
-            }
-            else{
-                ArticlesExplore("Why You Should Never Store Watermelon In A Fridge")
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Login to access the functionality",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
+                    Text(text = "Login")
+                }
             }
         }
     }
@@ -125,26 +158,54 @@ fun CameraScreen(
 }
 
 @Composable
-fun UserScreen(navController: NavController){
-    Scaffold(
-        bottomBar = { BottomNavigation(4,navController) },
-        topBar = { UserTopComponent()}
-    ) { innerPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+fun UserScreen(navController: NavController,fruitHubViewModel: FruitHubViewModel,auth: FirebaseAuth,context: Context){
+
+    if(fruitHubViewModel.authenticated){
+        Scaffold(
+            bottomBar = { BottomNavigation(4, navController) },
+            topBar = { UserTopComponent() }
+        ) { innerPadding ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                UserInfo()
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                )
+                OptionAccount("App Appearance", R.drawable.icon_appearence)
+                OptionAccount("Account & Security", R.drawable.icon_acc_sec)
+                OptionAccount("Notification", R.drawable.icon_notification)
+                OptionAccount("History", R.drawable.icon_history_user)
+                OptionAccount("Help & Support", R.drawable.icon_help)
+                LogOut(auth, context)
+            }
+        }
+    }
+    else{
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            UserInfo()
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp))
-            OptionAccount("App Appearance",R.drawable.icon_appearence)
-            OptionAccount("Account & Security",R.drawable.icon_acc_sec)
-            OptionAccount("Notification",R.drawable.icon_notification)
-            OptionAccount("History",R.drawable.icon_history_user)
-            OptionAccount("Help & Support",R.drawable.icon_help)
-            LogOut()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Login to access the functionality",
+                    style = MaterialTheme.typography.headlineLarge
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
+                    Text(text = "Login")
+                }
+            }
         }
     }
 }
@@ -165,6 +226,121 @@ fun FruitInfoScreen(navController: NavHostController, database: AppDatabase, fru
 
 
 @Composable
-fun ErrorScreen(msg:String){
+fun ErrorScreen(msg:String=""){
     Text("Error Occurred   $msg")
+}
+
+@Composable
+fun LoginScreen(
+    navController: NavController,
+    auth: FirebaseAuth,
+    context: Context,
+    fruitHubViewModel: FruitHubViewModel
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            navController.navigate("Home")
+                            fruitHubViewModel.authenticated = true
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Authentication failed.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+            }
+        ) {
+            Text("Login")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(
+            onClick = { navController.navigate("Signup") }
+        ) {
+            Text("Don't have an account? Sign up")
+        }
+    }
+}
+
+@Composable
+fun SignupScreen(
+    navController: NavController,
+    auth: FirebaseAuth,
+    context: Context,
+    fruitHubViewModel: FruitHubViewModel
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            navController.navigate("Home")
+                            fruitHubViewModel.authenticated = true
+                        } else {
+                            // Handle signup failure
+                            Toast.makeText(
+                                context,
+                                "Authentication failed.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+            }
+        ) {
+            Text("Sign up")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(
+            onClick = { navController.navigate("Login") }
+        ) {
+            Text("Already have an account? Login")
+        }
+    }
 }

@@ -31,6 +31,8 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.ligerinc.fruithub.dao.AppDatabase
 import com.ligerinc.fruithub.dao.FruitDataNetwork
@@ -46,13 +48,16 @@ import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
+//Firebase authentication
+    private lateinit var auth: FirebaseAuth
+
 // http client
     private val httpClient = HttpClient(Android) {
         install(ContentNegotiation) {
             json(contentType = ContentType("text", "plain"))
         }
     }
-
+//FireBase FireStore database
     private val db = Firebase.firestore
 
 
@@ -66,6 +71,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
 
         //Ask for Permission
         if(!hasRequiredPermissions()){
@@ -94,6 +101,19 @@ class MainActivity : ComponentActivity() {
             // navcontroller and navigation tree
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = MainActivityScreen.route) {
+
+                navigation(
+                    "Login",
+                    AuthenticationScreen.route
+                ){
+                    composable("Login"){
+                        LoginScreen(navController, auth, applicationContext, fruitHubViewModel)
+                    }
+                    composable("SignUp"){
+                        SignupScreen(navController, auth, applicationContext, fruitHubViewModel)
+                    }
+                }
+
                 navigation("Home",
                 MainActivityScreen.route
                 ){
@@ -147,7 +167,7 @@ class MainActivity : ComponentActivity() {
                     UserScreen.route
                 ){
                     composable("User"){
-                        UserScreen(navController)
+                        UserScreen(navController,fruitHubViewModel,auth, applicationContext)
                     }
                 }
                 composable("fInfo/{id}/{name}") { backStackEntry ->
