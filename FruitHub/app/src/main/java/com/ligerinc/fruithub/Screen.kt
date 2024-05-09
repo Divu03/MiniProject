@@ -49,7 +49,7 @@ fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavControll
                 modifier = Modifier.padding(5.dp)
             ){
                 TopExplore(fruitHubViewModel,navController)
-                SearchBarExplore(fruitDataDao, articleDao,fruitHubViewModel.switchStateExplore)
+                SearchBarExplore(fruitDataDao, articleDao,fruitHubViewModel.switchStateExplore,navController)
             }
         },
         bottomBar = {
@@ -222,11 +222,11 @@ fun UserScreen(navController: NavController,
 }
 
 @Composable
-fun FruitInfoScreen(navController: NavHostController, database: AppDatabase, fruitId: Int, fruitName: String) {
+fun FruitInfoScreen(navController: NavHostController, database: AppDatabase, fruitName: String) {
 
     val fruitDataDao = database.fruitDataDao()
 
-    val fruitDataRoom: FruitDataRoom? by fruitDataDao.getByIdFDR(fruitId.toString()).observeAsState()
+    val fruitDataRoom: FruitDataRoom? by fruitDataDao.getByNameFDR(fruitName).observeAsState()
     val fruitDataList: FruitList? by fruitDataDao.getByNameFL(fruitName).observeAsState()
 
     Column {

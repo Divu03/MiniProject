@@ -71,7 +71,7 @@ fun ImageClassificationScreen(bitmap: Bitmap, context: Context, navController: N
         // Observe the LiveData returned by the database query
         fruitData.fruitDataDao().getByNameFL(classifiedResult).observeAsState().value?.let { fruit ->
             if (fruit != null) {
-                navController.navigate("fInfo/${fruit.id}/${fruit.name}"){
+                navController.navigate("fInfo/${fruit.name}"){
                     popUpTo(CameraScreenDestination.route)
                 }
             } else {

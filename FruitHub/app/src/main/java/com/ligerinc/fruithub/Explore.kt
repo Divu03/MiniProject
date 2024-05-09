@@ -113,7 +113,8 @@ fun ArticlesExplore(
 fun SearchBarExplore(
     fruitDataDao: FruitDataDao,
     articleDao: ArticleDao,
-    isArticleView: Boolean
+    isArticleView: Boolean,
+    navController: NavController
 ) {
     var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
     var suggestions by remember { mutableStateOf<List<Any>>(emptyList()) } // Use Any to handle both FruitList and Article
@@ -126,8 +127,6 @@ fun SearchBarExplore(
                 val observer = Observer<List<Article>> { articles ->
                     suggestions = articles
                 }
-                // Assuming you have a function to search articles by name
-                // Replace this with your actual DAO function
                 articleDao.searchArticlesByName(searchPhrase.text)
                     .observe(lifecycleOwner, observer)
             } else {
@@ -163,11 +162,12 @@ fun SearchBarExplore(
                         .padding(8.dp)
                 )
             } else {
+                var name = (suggestion as FruitList).name
                 Text(
-                    text = (suggestion as FruitList).name,
+                    text = name,
                     modifier = Modifier
                         .clickable {
-                            // Handle click on fruit
+                            navController.navigate("fInfo/$name")
                         }
                         .padding(8.dp)
                 )

@@ -137,7 +137,7 @@ fun FruitCard(
             .size(width = 162.dp, height = 107.dp)
             .padding(10.dp),
         onClick = {
-            navController.navigate("fInfo/${fruitList.id}/${fruitList.name}")
+            navController.navigate("fInfo/${fruitList.name}")
         }
     ) {
         Row(

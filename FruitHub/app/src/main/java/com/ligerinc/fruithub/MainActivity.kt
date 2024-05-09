@@ -192,12 +192,10 @@ class MainActivity : ComponentActivity() {
                         },sharedPrefs)
                     }
                 }
-                composable("fInfo/{id}/{name}") { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("id")
+                composable("fInfo/{name}") { backStackEntry ->
                     val name = backStackEntry.arguments?.getString("name")
-                    if (id != null) {
-
-                        FruitInfoScreen(navController,database, id.toInt(), name.toString())
+                    if (name != null) {
+                        FruitInfoScreen(navController,database, name.toString())
                     }
                 }
 
