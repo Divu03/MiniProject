@@ -335,7 +335,7 @@ fun SignupScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                auth.createUserWithEmailAndPassword(fruitHubViewModel.email, password)
+                auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             navController.navigate("Home")
