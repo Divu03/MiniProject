@@ -51,6 +51,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
+/*
+plan of action :
+move the images on web and load ot from there
+new model : on server and integrate it
+load all the tabular data from firestore if possible
+*/
+
 class MainActivity : ComponentActivity() {
 //Firebase authentication
     private lateinit var auth: FirebaseAuth
@@ -77,12 +84,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // firebase authentication
         auth = Firebase.auth
+
+
         sharedPrefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val email = sharedPrefs.getString("email", "") ?: ""
-        Log.d("email is what",email)
         fruitHubViewModel.email = email
-        Log.d("email is view",fruitHubViewModel.email)
 
         //Ask for Permission
         if(!hasRequiredPermissions()){
