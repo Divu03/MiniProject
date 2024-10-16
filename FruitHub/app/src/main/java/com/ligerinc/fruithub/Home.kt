@@ -1,6 +1,5 @@
 package com.ligerinc.fruithub
 
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -24,15 +23,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -41,7 +36,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ligerinc.fruithub.dao.ArticleDao
 import com.ligerinc.fruithub.dao.FruitList
 
 @Composable
@@ -185,13 +178,13 @@ val item = listOf(
         hasNews = false,
         route = MainActivityScreen.route
     ),
-    NavigationItem(
-        title = "Explore",
-        selectedIcon = Icons.Filled.Search,
-        unselectedIcon = Icons.Outlined.Search,
-        hasNews = false,
-        route = ExploreScreen.route
-    ),
+//    NavigationItem(
+//        title = "Explore",
+//        selectedIcon = Icons.Filled.Search,
+//        unselectedIcon = Icons.Outlined.Search,
+//        hasNews = false,
+//        route = ExploreScreen.route
+//    ),
     NavigationItem(
         title = "Camera",
         selectedIcon = Icons.Filled.Create,
@@ -199,13 +192,13 @@ val item = listOf(
         hasNews = false,
         route = CameraScreenDestination.route
     ),
-    NavigationItem(
-        title = "MySaves",
-        selectedIcon = Icons.Filled.Favorite,
-        unselectedIcon = Icons.Outlined.FavoriteBorder,
-        hasNews = false,
-        route = MySaveScreen.route
-    ),
+//    NavigationItem(
+//        title = "MySaves",
+//        selectedIcon = Icons.Filled.Favorite,
+//        unselectedIcon = Icons.Outlined.FavoriteBorder,
+//        hasNews = false,
+//        route = MySaveScreen.route
+//    ),
     NavigationItem(
         title = "User",
         selectedIcon = Icons.Filled.Person,
@@ -224,15 +217,15 @@ fun BottomNavigation(activityIndex: Int, navController: NavController){
     // Update selected item index based on the current route
     selectedItemIndex = when (currentRoute) {
         MainActivityScreen.route -> 0
-        ExploreScreen.route -> 1
-        CameraScreenDestination.route -> 2
-        MySaveScreen.route -> 3
-        UserScreen.route -> 4
+        //ExploreScreen.route -> 1
+        CameraScreenDestination.route -> 1
+        //MySaveScreen.route -> 3
+        UserScreen.route -> 3
         else -> selectedItemIndex
     }
     NavigationBar {
         item.forEachIndexed{
-                index, items ->if (index!=2) {
+                index, items ->if (index!=1) {
             NavigationBarItem(
                 selected = selectedItemIndex == index,
                 onClick = {
@@ -301,64 +294,64 @@ fun TopComponent(){
 }
 
 
-@Composable
-fun PopularArticles(navController: NavController,articleDao: ArticleDao,context:Context){
-    val popularArticles by articleDao.getAllArticles().observeAsState()
-    Column(
-        Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp, 0.dp)
-        ) {
-            Text(
-                text = "Popular Articles",
-                fontFamily = FontFamily(
-                    Font(resId = R.font.jaldi_bold,
-                        FontWeight.Bold)
-                ),
-                fontSize = 20.sp
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = "View All",
-                    fontFamily = FontFamily(
-                        Font(
-                            resId = R.font.jaldi_bold,
-                            FontWeight.Bold
-                        )
-                    ),
-                    fontSize = 16.sp,
-                    color = Color(20,140,83)
-                )
-                Image(
-                    Icons.AutoMirrored.Filled.ArrowForward,
-                    null,
-                    colorFilter = ColorFilter.tint(Color(20,140,83))
-                )
-            }
-        }
-        Row(
-            Modifier.horizontalScroll(rememberScrollState())
-        ) {
-            popularArticles?.forEach { article ->
-                ArticlesHome(
-                    articleId = article.id, // Pass the article ID
-                    articleTitle = article.title,
-                    articleImageId = article.imageName,
-                    navController
-                )
-            }
-        }
-    }
-
-}
+//@Composable
+//fun PopularArticles(navController: NavController,articleDao: ArticleDao,context:Context){
+//    val popularArticles by articleDao.getAllArticles().observeAsState()
+//    Column(
+//        Modifier
+//            .fillMaxWidth()
+//    ) {
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(10.dp, 0.dp)
+//        ) {
+//            Text(
+//                text = "Popular Articles",
+//                fontFamily = FontFamily(
+//                    Font(resId = R.font.jaldi_bold,
+//                        FontWeight.Bold)
+//                ),
+//                fontSize = 20.sp
+//            )
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ){
+//                Text(
+//                    text = "View All",
+//                    fontFamily = FontFamily(
+//                        Font(
+//                            resId = R.font.jaldi_bold,
+//                            FontWeight.Bold
+//                        )
+//                    ),
+//                    fontSize = 16.sp,
+//                    color = Color(20,140,83)
+//                )
+//                Image(
+//                    Icons.AutoMirrored.Filled.ArrowForward,
+//                    null,
+//                    colorFilter = ColorFilter.tint(Color(20,140,83))
+//                )
+//            }
+//        }
+//        Row(
+//            Modifier.horizontalScroll(rememberScrollState())
+//        ) {
+//            popularArticles?.forEach { article ->
+//                ArticlesHome(
+//                    articleId = article.id, // Pass the article ID
+//                    articleTitle = article.title,
+//                    articleImageId = article.imageName,
+//                    navController
+//                )
+//            }
+//        }
+//    }
+//
+//}
 
 
 @Composable
@@ -476,59 +469,58 @@ fun RecentFruit(navController: NavController){
 }
 
 
-@Composable
-fun RecentArticles(navController: NavController){
-    Column(
-        Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp, 0.dp)
-        ) {
-            Text(
-                text = "Recent Articles",
-                fontFamily = FontFamily(
-                    Font(resId = R.font.jaldi_bold,
-                        FontWeight.Bold)
-                ),
-                fontSize = 20.sp
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = "View All",
-                    fontFamily = FontFamily(
-                        Font(
-                            resId = R.font.jaldi_bold,
-                            FontWeight.Bold
-                        )
-                    ),
-                    fontSize = 16.sp,
-                    color = Color(20,140,83)
-                )
-                Image(
-                    Icons.AutoMirrored.Filled.ArrowForward,
-                    null,
-                    colorFilter = ColorFilter.tint(Color(20,140,83))
-                )
-            }
-        }
-        Row(
-            Modifier.horizontalScroll(rememberScrollState())
-        ) {
-            ArticlesHome(articleTitle = "Watermelon", navController = navController)
-            ArticlesHome(articleTitle = "Watermelon", navController = navController)
-            ArticlesHome(articleTitle = "Watermelon", navController = navController)
-            ArticlesHome(articleTitle = "Watermelon", navController = navController)
-        }
-    }
-
-}
+//@Composable
+//fun RecentArticles(navController: NavController){
+//    Column(
+//        Modifier
+//            .fillMaxWidth()
+//    ) {
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(10.dp, 0.dp)
+//        ) {
+//            Text(
+//                text = "Recent Articles",
+//                fontFamily = FontFamily(
+//                    Font(resId = R.font.jaldi_bold,
+//                        FontWeight.Bold)
+//                ),
+//                fontSize = 20.sp
+//            )
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ){
+//                Text(
+//                    text = "View All",
+//                    fontFamily = FontFamily(
+//                        Font(
+//                            resId = R.font.jaldi_bold,
+//                            FontWeight.Bold
+//                        )
+//                    ),
+//                    fontSize = 16.sp,
+//                    color = Color(20,140,83)
+//                )
+//                Image(
+//                    Icons.AutoMirrored.Filled.ArrowForward,
+//                    null,
+//                    colorFilter = ColorFilter.tint(Color(20,140,83))
+//                )
+//            }
+//        }
+//        Row(
+//            Modifier.horizontalScroll(rememberScrollState())
+//        ) {
+//            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+//            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+//            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+//            ArticlesHome(articleTitle = "Watermelon", navController = navController)
+//        }
+//    }
+//}
 
 
 

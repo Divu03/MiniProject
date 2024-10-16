@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -40,44 +39,50 @@ import com.ligerinc.fruithub.dao.FruitDataDao
 import com.ligerinc.fruithub.dao.FruitDataRoom
 import com.ligerinc.fruithub.dao.FruitList
 
-@Composable
-fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao,articleDao: ArticleDao){
-    Scaffold(
-        topBar = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(5.dp)
-            ){
-                TopExplore(fruitHubViewModel,navController)
-                SearchBarExplore(fruitDataDao, articleDao,fruitHubViewModel.switchStateExplore,navController)
-            }
-        },
-        bottomBar = {
-            BottomNavigation(1, navController)
-        }
-    ) {
-            innerPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            if(fruitHubViewModel.switchStateExplore){
-                ArticlesExplore("How watermelons are healthy for you in summer season")
-            }else{
-                FruitsExplore(navController)
-            }
-        }
-    }
-}
+//@Composable
+//fun ExploreScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao,articleDao: ArticleDao){
+//    Scaffold(
+//        topBar = {
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(5.dp)
+//            ){
+//                TopExplore(fruitHubViewModel,navController)
+//                SearchBarExplore(fruitDataDao, articleDao,fruitHubViewModel.switchStateExplore,navController)
+//            }
+//        },
+//        bottomBar = {
+//            BottomNavigation(1, navController)
+//        }
+//    ) {
+//            innerPadding ->
+//        Column(
+//            Modifier
+//                .fillMaxSize()
+//                .padding(innerPadding),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ){
+//            if(fruitHubViewModel.switchStateExplore){
+//                ArticlesExplore("How watermelons are healthy for you in summer season")
+//            }else{
+//                FruitsExplore(navController)
+//            }
+//            FruitsExplore(navController)
+//        }
+//    }
+//}
 
 
 @Composable
-fun MainActivityScreen(navController: NavController,context: Context,articleDao: ArticleDao) {
+fun MainActivityScreen(navController: NavController,context: Context,articleDao: ArticleDao,fruitHubViewModel:FruitHubViewModel,fruitDataDao: FruitDataDao) {
     Scaffold(
         bottomBar = { BottomNavigation(0,navController) },
-        topBar = { TopComponent()}
+        topBar = {
+            Column {
+                TopComponent()
+                SearchBarExplore(fruitDataDao, articleDao,fruitHubViewModel.switchStateExplore,navController)
+            }
+        }
     ) { innerPadding ->
         Column(
             Modifier
@@ -85,70 +90,70 @@ fun MainActivityScreen(navController: NavController,context: Context,articleDao:
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            PopularArticles(navController,articleDao,context)
-            ExploreFruit(navController)
-            RecentFruit(navController)
+//            ExploreFruit(navController)
+//            RecentFruit(navController)
+            FruitsExplore(navController)
         }
     }
 }
 
-@Composable
-fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao,isUserLoggedIn:Boolean){
-    var s by remember { mutableStateOf(TextFieldValue("")) }
-
-    Scaffold(
-        topBar = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(5.dp)
-            ) {
-                TopSaves(fruitHubViewModel, navController)
-                s = searchBarSaves()
-            }
-                 }, bottomBar = {
-                BottomNavigation(activityIndex = 3, navController)
-            }
-    ) { innerPadding ->
-        if(isUserLoggedIn){
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (!fruitHubViewModel.switchStateSaves) {
-                    FruitsSaved(navController, s)
-                } else {
-                    ArticlesExplore("Why You Should Never Store Watermelon In A Fridge")
-                }
-            }
-        }
-        else{
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Login to access the functionality",
-                        style = MaterialTheme.typography.headlineLarge
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
-                        Text(text = "Login")
-                    }
-                }
-            }
-        }
-    }
-
-}
+//@Composable
+//fun MySaveScreen(fruitHubViewModel:FruitHubViewModel,navController: NavController,fruitDataDao: FruitDataDao,isUserLoggedIn:Boolean){
+//    var s by remember { mutableStateOf(TextFieldValue("")) }
+//
+//    Scaffold(
+//        topBar = {
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(5.dp)
+//            ) {
+//                TopSaves(fruitHubViewModel, navController)
+//                s = searchBarSaves()
+//            }
+//                 }, bottomBar = {
+//                BottomNavigation(activityIndex = 3, navController)
+//            }
+//    ) { innerPadding ->
+//        if(isUserLoggedIn){
+//            Column(
+//                Modifier
+//                    .fillMaxSize()
+//                    .padding(innerPadding),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                if (!fruitHubViewModel.switchStateSaves) {
+//                    FruitsSaved(navController, s)
+//                } else {
+//                    ArticlesExplore("Why You Should Never Store Watermelon In A Fridge")
+//                }
+//            }
+//        }
+//        else{
+//            Surface(
+//                modifier = Modifier.fillMaxSize(),
+//                color = MaterialTheme.colorScheme.background
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(16.dp),
+//                    verticalArrangement = Arrangement.Center,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(
+//                        text = "Login to access the functionality",
+//                        style = MaterialTheme.typography.headlineLarge
+//                    )
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Button(onClick = { navController.navigate(AuthenticationScreen.route) }) {
+//                        Text(text = "Login")
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//}
 
 @Composable
 fun CameraScreen(

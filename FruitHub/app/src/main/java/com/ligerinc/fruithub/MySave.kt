@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.ligerinc.fruithub.dao.FruitList
 
 
+//Top Screen for Saved Item
 @Composable
 fun TopSaves(fruitHubViewModel: FruitHubViewModel,navController: NavController){
     Row (
@@ -76,6 +77,8 @@ fun TopSaves(fruitHubViewModel: FruitHubViewModel,navController: NavController){
         )
     }
 }
+
+
 val savedfruits : List<FruitList> = listOf(
     FruitList(90,"Watermelon",R.drawable.watermelon,R.drawable.carambula_info),
     FruitList(1,"Apple Braeburn",R.drawable.apple,R.drawable.carambula_info),
@@ -84,6 +87,7 @@ val savedfruits : List<FruitList> = listOf(
     FruitList(10,"Carambula",R.drawable.carambula,R.drawable.carambula_info)
 )
 
+// This shows fruits that are saved : Not Needed
 @Composable
 fun FruitsSaved(navController:NavController,searchPhrase:TextFieldValue) {
     var suggestions by remember { mutableStateOf<List<FruitList>>(emptyList()) }
@@ -116,6 +120,7 @@ fun FruitsSaved(navController:NavController,searchPhrase:TextFieldValue) {
     }
 }
 
+//Search Bar for Saved Fruits : We do not need it write now
 @Composable
 fun searchBarSaves():TextFieldValue {
     var searchPhrase by remember { mutableStateOf(TextFieldValue("")) }
