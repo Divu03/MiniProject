@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -202,20 +203,20 @@ fun TopExplore(fruitHubViewModel: FruitHubViewModel,navController: NavController
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-//        Switch(
-//            checked = fruitHubViewModel.switchStateExplore,
-//            onCheckedChange = { checked ->
-//                fruitHubViewModel.switchStateExplore = checked },
-//            thumbContent = if(!fruitHubViewModel.switchStateExplore){
-//                {
-//                    Modifier.size(24.dp)
-//                }
-//            }else{
-//                null
-//            },
-//            modifier = Modifier
-//                .padding(0.dp,0.dp,20.dp,0.dp)
-//        )
+        Switch(
+            checked = fruitHubViewModel.switchStateExplore,
+            onCheckedChange = { checked ->
+                fruitHubViewModel.switchStateExplore = checked },
+            thumbContent = if(!fruitHubViewModel.switchStateExplore){
+                {
+                    Modifier.size(24.dp)
+                }
+            }else{
+                null
+            },
+            modifier = Modifier
+                .padding(0.dp,0.dp,20.dp,0.dp)
+        )
     }
 }
 

@@ -56,7 +56,6 @@ plan of action :
 move the images on web and load ot from there
 new model : on server and integrate it
 load all the tabular data from firestore if possible
-make change in the UI of articles Remove it first if done than add it to main file
 */
 
 class MainActivity : ComponentActivity() {
@@ -147,17 +146,17 @@ class MainActivity : ComponentActivity() {
                 MainActivityScreen.route
                 ){
                     composable("Home") {
-                        MainActivityScreen(navController,applicationContext,database.articleDao(),fruitHubViewModel,database.fruitDataDao())
+                        MainActivityScreen(navController,applicationContext,database.articleDao())
                     }
                 }
-//                navigation(
-//                    "Explore",
-//                    ExploreScreen.route
-//                ){
-//                    composable("Explore"){
-//                        ExploreScreen(fruitHubViewModel,navController,database.fruitDataDao(),database.articleDao())
-//                    }
-//                }
+                navigation(
+                    "Explore",
+                    ExploreScreen.route
+                ){
+                    composable("Explore"){
+                        ExploreScreen(fruitHubViewModel,navController,database.fruitDataDao(),database.articleDao())
+                    }
+                }
                 navigation(
                     "Camera",
                     CameraScreenDestination.route
@@ -182,15 +181,15 @@ class MainActivity : ComponentActivity() {
 
                     }
                 }
-//                navigation(
-//                    "MySave",
-//                    MySaveScreen.route
-//                ){
-//                    composable("MySave"){
-//                        MySaveScreen(fruitHubViewModel, navController,database.fruitDataDao(),isUserLoggedIn())
-//
-//                    }
-//                }
+                navigation(
+                    "MySave",
+                    MySaveScreen.route
+                ){
+                    composable("MySave"){
+                        MySaveScreen(fruitHubViewModel, navController,database.fruitDataDao(),isUserLoggedIn())
+
+                    }
+                }
                 navigation(
                     "User",
                     UserScreen.route
